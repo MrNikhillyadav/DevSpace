@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { useSession, signOut } from "next-auth/react"
+import { signOut } from "next-auth/react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,9 +8,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { getServerSession } from "next-auth"
 
 export default function Navbar() {
-  const { data: session } = useSession()
+  const { data: session } = getServerSession()
 
   return (
     <nav className="border-b">
