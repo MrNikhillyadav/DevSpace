@@ -2,8 +2,9 @@ import { Inter } from "next/font/google"
 import "./globals.css"
 import Navbar from "@/components/Navbar"
 import { getServerSession } from "next-auth"
-import {authOptions} from "./api/auth/[...nextauth]/route" 
+import { authOptions } from "./api/auth/[...nextauth]/route"
 import Provider from "@/components/Provider"
+import { Toaster } from "@/components/ui/toaster"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -28,6 +29,7 @@ export default async function RootLayout({
             <main className="container mx-auto px-4 py-8">
               {children}
             </main>
+            <Toaster />
           </div>
         </Provider>
       </body>

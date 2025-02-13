@@ -17,6 +17,9 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Icons } from "@/components/icons"
+import {useToast}  from "@/components/ui/use-toast"
+import { useSession } from "next-auth/react"
+import { redirect } from "next/navigation"
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -36,7 +39,14 @@ const formSchema = z.object({
 
 export default function RegisterPage() {
   const router = useRouter()
+  const { toast } = useToast()
   const [isLoading, setIsLoading] = useState(false)
+  const { data: session } = useSession()
+
+  // Redirect if already logged in
+  if (session) {
+    redirect('/')
+  }
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -66,18 +76,24 @@ export default function RegisterPage() {
 
       if (!response.ok) {
         const data = await response.json()
-        form.setError("root", {
-          message: data.message || "Something went wrong",
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: data.message || "Something went wrong",
         })
         return
       }
+
+      toast({
+        title: "Success!",
+        description: "Account created successfully. Please sign in.",
+      })
 
       router.push("/login")
     } finally {
       setIsLoading(false)
     }
   }
-
   return (
     <div className="container max-w-md mx-auto mt-16">
       <div className="space-y-6">

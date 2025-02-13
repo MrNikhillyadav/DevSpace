@@ -1,6 +1,8 @@
+"use client"
+
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { signOut } from "next-auth/react"
+import { useSession, signOut } from "next-auth/react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,10 +10,26 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { getServerSession } from "next-auth"
+import { useToast } from "@/components/ui/use-toast"
+import { useRouter } from "next/navigation"
+
 
 export default function Navbar() {
-  const { data: session } = getServerSession()
+  const { data: session } = useSession()
+  const { toast } = useToast()
+  const router = useRouter()
+
+  const handleSignOut = async () => {
+
+    await signOut({ redirect: false })
+    toast({
+      title: "Signed out successfully",
+      description: "Come back soon!",
+    })
+    router.push('/')
+    router.refresh()
+  }
+
 
   return (
     <nav className="border-b">
@@ -33,8 +51,11 @@ export default function Navbar() {
         <div className="flex items-center space-x-4">
           {session ? (
             <>
-              <Button asChild variant="ghost">
+              <Button asChild variant="outline">
                 <Link href="/new">Write a Post</Link>
+              </Button>
+              <Button onClick={handleSignOut} className="cursor-pointer" asChild>
+                <span >Logout</span>
               </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger>
@@ -45,14 +66,17 @@ export default function Navbar() {
                     </AvatarFallback>
                   </Avatar>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
+                <DropdownMenuContent align="end" className="w-48">
+                  <div className="px-2 py-1.5 text-sm font-medium text-muted-foreground">
+                    {session.user?.email}
+                  </div>
                   <DropdownMenuItem asChild>
                     <Link href="/profile">Profile</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/dashboard">Dashboard</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => signOut()}>
+                  <DropdownMenuItem onClick={handleSignOut} className="text-red-600 focus:text-red-600">
                     Sign Out
                   </DropdownMenuItem>
                 </DropdownMenuContent>

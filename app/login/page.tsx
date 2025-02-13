@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
-import { signIn } from "next-auth/react"
+import { signIn, useSession } from "next-auth/react"
 import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -18,22 +18,24 @@ import {
 import { Input } from "@/components/ui/input"
 import { useState } from "react"
 import { Icons } from "@/components/icons"
+import { useToast } from "@/components/ui/use-toast"; 
+import { redirect } from "next/navigation"
+import { formSchema } from "@/lib/schema"
 
-const formSchema = z.object({
-  email: z.string().email({
-    message: "Please enter a valid email address.",
-  }),
-  password: z.string().min(1, {
-    message: "Password is required.",
-  }),
-})
 
 export default function LoginPage() {
+  const {data:session} = useSession()
   const router = useRouter()
+  const { toast } = useToast()
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get("callbackUrl") || "/"
+  const [error, setError] = useState<string | null>(null); // Add this line
+
+  // Redirect if already logged in
+  if (session) {
+    redirect('/feed')
+  }
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -45,8 +47,8 @@ export default function LoginPage() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true)
-    setError(null)
-    
+    setError(null); // Clear any previous error before attempting to sign in.
+
     try {
       const result = await signIn("credentials", {
         email: values.email,
@@ -56,19 +58,26 @@ export default function LoginPage() {
       })
 
       if (result?.error) {
-        setError(result.error)
+        setError(result.error); // Set the error message
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: result.error,
+        })
         return
       }
 
-      router.push(callbackUrl)
+      toast({
+        title: "Success!",
+        description: "Logged in successfully.",
+      })
+
+      router.push('/')
       router.refresh()
-    } catch (error) {
-      setError("An error occurred during sign in")
     } finally {
       setIsLoading(false)
     }
   }
-
   return (
     <div className="container max-w-md mx-auto mt-16">
       <div className="space-y-6">
