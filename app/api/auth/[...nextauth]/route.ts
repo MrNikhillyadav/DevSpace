@@ -1,18 +1,12 @@
-
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import NextAuth from "next-auth"
-import GoogleProvider from "next-auth/providers/google"
-import CredentialsProvider from "next-auth/providers/credentials"
-import { prisma } from "@/lib/db"
-import { compare } from "bcrypt"
+import prisma  from "@/lib/db"
+import bcrypt from "bcrypt"
+import CredentialsProvider from "next-auth/providers/credentials";
 
 export const authOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    }),
     CredentialsProvider({
       name: "Credentials",
       credentials: {
@@ -21,7 +15,7 @@ export const authOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
-          return null
+          throw new Error("Please enter your email and password")
         }
 
         const user = await prisma.user.findUnique({
@@ -31,13 +25,16 @@ export const authOptions = {
         })
 
         if (!user || !user.password) {
-          return null
+          throw new Error("No user found with this email")
         }
 
-        const isPasswordValid = await compare(credentials.password, user.password)
+        const isPasswordValid = await bcrypt.compare(
+          credentials.password,
+          user.password
+        )
 
         if (!isPasswordValid) {
-          return null
+          throw new Error("Invalid password")
         }
 
         return {
@@ -56,19 +53,22 @@ export const authOptions = {
     signIn: "/login",
   },
   callbacks: {
-    session: async ({ session, token }) => {
-      if (session?.user) {
-        session.user.id = token.uid;
-      }
-      return session;
-    },
-    jwt: async ({ user, token }) => {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
-        token.uid = user.id;
+        token.id = user.id;
+        token.email = user.email;
       }
       return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id as string;
+        session.user.email = token.email;
+      }
+      return session;
     }
-  }
+  },
+  debug: process.env.NODE_ENV === "development",
 }
 
 const handler = NextAuth(authOptions)
