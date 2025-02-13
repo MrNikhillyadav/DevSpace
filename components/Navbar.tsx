@@ -9,6 +9,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { RiNotification2Fill } from "react-icons/ri";
+import { FaPenClip } from "react-icons/fa6";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useToast } from "@/components/ui/use-toast"
 import { useRouter } from "next/navigation"
@@ -32,11 +34,11 @@ export default function Navbar() {
 
 
   return (
-    <nav className="border-b">
+    <nav className="border-b px-20 ">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <div className="flex items-center space-x-8">
           <Link href="/" className="text-xl font-bold">
-            BlogPlatform
+            <span className="text-2xl tracking-tighter text-primary font-bold">nova.</span>
           </Link>
           <div className="hidden md:flex space-x-6">
             <Link href="/" className="text-sm font-medium hover:text-primary">
@@ -51,10 +53,19 @@ export default function Navbar() {
         <div className="flex items-center space-x-4">
           {session ? (
             <>
-              <Button asChild variant="outline">
-                <Link href="/new">Write a Post</Link>
+              
+              <Button asChild >
+                <Link href="/post-new-blog">
+                <FaPenClip />
+                </Link>
               </Button>
-              <Button onClick={handleSignOut} className="cursor-pointer" asChild>
+              <Button asChild variant="outline">
+                <Link href="/notifications">
+                <RiNotification2Fill />
+                </Link>
+              </Button>
+              
+              <Button onClick={handleSignOut} variant="outline" className="cursor-pointer" asChild>
                 <span >Logout</span>
               </Button>
               <DropdownMenu>
@@ -72,6 +83,9 @@ export default function Navbar() {
                   </div>
                   <DropdownMenuItem asChild>
                     <Link href="/profile">Profile</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/notifications">Notifications</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/dashboard">Dashboard</Link>

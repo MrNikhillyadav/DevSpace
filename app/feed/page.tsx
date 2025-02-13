@@ -29,9 +29,9 @@ export default async function Feed() {
   const posts = await getLatestPosts()
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 border  max-w-[1200px] mx-auto bg-[#ebf3ff] p-8 rounded-lg ">
       <section className="text-center space-y-4">
-        <h1 className="text-4xl font-bold">Welcome to BlogPlatform</h1>
+        <h1 className="text-4xl font-bold">Welcome to <span className="text-primary ">nova</span> blog</h1>
         <p className="text-xl text-muted-foreground">
           Discover stories, thinking, and expertise from writers on any topic.
         </p>
