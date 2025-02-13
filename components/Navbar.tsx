@@ -42,7 +42,7 @@ export default function Navbar() {
           </Link>
           <div className="hidden md:flex space-x-6">
             <Link href="/" className="text-sm font-medium hover:text-primary">
-              Home
+              Feed
             </Link>
             <Link href="/explore" className="text-sm font-medium hover:text-primary">
               Explore
@@ -55,7 +55,7 @@ export default function Navbar() {
             <>
               
               <Button asChild >
-                <Link href="/post-new-blog">
+                <Link href="/publish-new-blog">
                 <FaPenClip />
                 </Link>
               </Button>
