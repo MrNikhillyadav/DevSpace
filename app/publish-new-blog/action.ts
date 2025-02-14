@@ -5,18 +5,18 @@ import { newBlogSchema } from "@/lib/schema";
 import { redirect } from "next/navigation";
 
 export  async function publishNewBlogPost(formData: FormData) {
-  const values = Object.fromEntries(formData.entries());
-  console.log(values)
-  const {title,content, } = newBlogSchema.parse(values);
+  const {title,content} = newBlogSchema.parse(formData)
   
-
   await prisma.post.create({
-    data: {
-        // TODO: ADD TITLE-SLUG| IMAGE BLOB 
-      title: title.trim(),
-      content: content?.trim(),
-     
-    },
+    data: { 
+      title,
+      content,
+      author: {
+        connect: {
+          name: 'Rahul',
+        }
+      }
+    }
   });
 
   redirect("/feed");

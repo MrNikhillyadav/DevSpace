@@ -1,15 +1,14 @@
 "use client";
 
-import LoadingButton from "@/components/LoadingButton";
-import RichTextEditor from "@/components/RichTextEditor";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import LoadingButton from "@/components/LoadingButton";
+import RichTextEditor from "@/components/RichTextEditor";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { CreateNewBlogSchemaValues,newBlogSchema } from "@/lib/schema";
@@ -18,6 +17,7 @@ import { draftToMarkdown } from "markdown-draft-js";
 import { useForm } from "react-hook-form";
 import {publishNewBlogPost}  from "./action";
 
+
 export default function PublishNewBlog() {
   const form = useForm<CreateNewBlogSchemaValues>({
     resolver: zodResolver(newBlogSchema),
@@ -25,10 +25,7 @@ export default function PublishNewBlog() {
 
   const {
     handleSubmit,
-    watch,
-    trigger,
     control,
-    setValue,
     setFocus,
     formState: { isSubmitting },
   } = form;
@@ -106,10 +103,10 @@ export default function PublishNewBlog() {
            
             <FormField
               control={control}
-              name="description"
+              name="content"
               render={({ field }) => (
                 <FormItem>
-                  <Label onClick={() => setFocus("description")}>
+                  <Label onClick={() => setFocus("content")}>
                     Description
                   </Label>
                   <FormControl>

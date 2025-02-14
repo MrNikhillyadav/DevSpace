@@ -1,7 +1,5 @@
 import prisma  from "@/lib/db"
 import Link from "next/link"
-import { getServerSession } from "next-auth"
-import {redirect} from 'next/navigation'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
@@ -13,36 +11,30 @@ async function getLatestPosts() {
     include: {
       author: true,
     },
-    orderBy: {
-      createdAt: "desc",
-    },
-    take: 9,
+
   })
   return posts
 }
 
 export default async function Feed() {
   
+
   const posts = await getLatestPosts()
+  console.log('posts: ', posts);
 
   return (
-    <div className="space-y-8 border  max-w-[1200px] mx-auto bg-[#ebf3ff] p-8 rounded-lg ">
-      <section className="text-center space-y-4">
-        <h1 className="text-4xl font-bold">Welcome to <span className="text-primary ">nova</span> blog</h1>
-        <p className="text-xl text-muted-foreground">
-          Discover stories, thinking, and expertise from writers on any topic.
-        </p>
-      </section>
+    <div className="space-y-8   max-w-[900px] mx-auto  rounded-lg ">
+    
 
-      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <section className="grid grid-cols-1  gap-2">
         {posts.map((post) => (
           <Card key={post.id}>
             <Link href={`/post/${post.id}`}>
               <CardHeader>
-                <CardTitle className="line-clamp-2">{post.title}</CardTitle>
+                <CardTitle className=" line-clamp-3 text-black/80 p-1">{post.title}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="line-clamp-3 text-muted-foreground">
+                <p className="line-clamp-3 text-md  text-muted-foreground">
                   {post.content.substring(0, 150)}...
                 </p>
               </CardContent>
