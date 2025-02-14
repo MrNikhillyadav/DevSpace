@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
+import {  toast } from 'sonner'
 import { signIn, useSession } from "next-auth/react"
 import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
@@ -16,26 +17,28 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Icons } from "@/components/icons"
-import { useToast } from "@/components/ui/use-toast"; 
-import { redirect } from "next/navigation"
 import { formSchema } from "@/lib/schema"
 
-
 export default function LoginPage() {
-  const {data:session} = useSession()
+  const { data: session } = useSession()
   const router = useRouter()
-  const { toast } = useToast()
   const [isLoading, setIsLoading] = useState(false)
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get("callbackUrl") || "/"
-  const [error, setError] = useState<string | null>(null); // Add this line
+  const [error, setError] = useState<string | null>(null)
+  const [requiredError, setRequiredError] = useState({
+    emailReq: false,
+    passReq: false,
+  });
 
-  // Redirect if already logged in
-  if (session) {
-    redirect('/feed')
-  }
+  // Handle redirect in useEffect instead of conditional rendering
+  useEffect(() => {
+    if (session) {
+      router.push('/feed')
+    }
+  }, [session, router])
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -46,38 +49,45 @@ export default function LoginPage() {
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    const loadId = toast.loading('Signing in...');
     setIsLoading(true)
-    setError(null); // Clear any previous error before attempting to sign in.
+    setError(null)
 
-    try {
-      const result = await signIn("credentials", {
+    if (!values.email || !values.password) {
+      toast.error('email and password required try again!')
+      toast.dismiss(loadId);
+      return;
+    }
+  
+      const res = await signIn("credentials", {
         email: values.email,
         password: values.password,
         redirect: false,
         callbackUrl,
       })
 
-      if (result?.error) {
-        setError(result.error); // Set the error message
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: result.error,
-        })
-        return
+      toast.dismiss(loadId);
+      if (!res?.error) {
+        router.push('/');
+        toast.success('Signed In');
+      } else {
+        if (res.status === 401) {
+          toast.error('Invalid Credentials, try again!');
+        } else if (res.status === 400) {
+          toast.error('Missing Credentials!');
+        } else if (res.status === 404) {
+          toast.error('Account not found!');
+        } else if (res.status === 403) {
+          toast.error('Forbidden!');
+        } else {
+          toast.error('oops something went wrong..!');
+        }
+
+        setIsLoading(false)
+
       }
-
-      toast({
-        title: "Success!",
-        description: "Logged in successfully.",
-      })
-
-      router.push('/')
-      router.refresh()
-    } finally {
-      setIsLoading(false)
-    }
   }
+
   return (
     <div className="container max-w-md mx-auto mt-16">
       <div className="space-y-6">

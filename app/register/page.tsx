@@ -17,9 +17,9 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Icons } from "@/components/icons"
-import {useToast}  from "@/components/ui/use-toast"
 import { useSession } from "next-auth/react"
 import { redirect } from "next/navigation"
+import { toast } from 'sonner';
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -38,15 +38,13 @@ const formSchema = z.object({
 })
 
 export default function RegisterPage() {
-  const router = useRouter()
-  const { toast } = useToast()
-  const [isLoading, setIsLoading] = useState(false)
   const { data: session } = useSession()
-
-  // Redirect if already logged in
   if (session) {
-    redirect('/')
+    redirect('/feed')
   }
+
+  const router = useRouter()
+  const [isLoading, setIsLoading] = useState(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -59,10 +57,16 @@ export default function RegisterPage() {
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    const loadId = toast.loading('Signing up...');
     setIsLoading(true)
 
-    try {
-      const response = await fetch("/api/register", {
+    if (!values.email || !values.password) {
+      toast.error('email and password missing!')
+      toast.dismiss(loadId);
+      return;
+    }
+    
+      const res = await fetch("/api/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -74,25 +78,27 @@ export default function RegisterPage() {
         }),
       })
 
-      if (!response.ok) {
-        const data = await response.json()
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: data.message || "Something went wrong",
-        })
-        return
+      toast.dismiss(loadId);
+      if (!res?.error) {
+        router.push('/login');
+        toast.success('Signed Up successfully');
+      } else {
+        if (res.status === 401) {
+          toast.error('Invalid Credentials, try again!');
+        } else if (res.status === 400) {
+          toast.error('Missing Credentials!');
+        } else if (res.status === 404) {
+          toast.error('Account not found!');
+        } else if (res.status === 403) {
+          toast.error('Forbidden!');
+        } else {
+          toast.error('oops something went wrong..!');
+        }
+
+        setIsLoading(false)
+
       }
-
-      toast({
-        title: "Success!",
-        description: "Account created successfully. Please sign in.",
-      })
-
-      router.push("/login")
-    } finally {
-      setIsLoading(false)
-    }
+    
   }
   return (
     <div className="container max-w-md mx-auto mt-16">

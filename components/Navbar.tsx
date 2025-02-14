@@ -12,22 +12,17 @@ import {
 import { RiNotification2Fill } from "react-icons/ri";
 import { FaPenClip } from "react-icons/fa6";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { useToast } from "@/components/ui/use-toast"
 import { useRouter } from "next/navigation"
 
 
 export default function Navbar() {
   const { data: session } = useSession()
-  const { toast } = useToast()
   const router = useRouter()
 
   const handleSignOut = async () => {
 
     await signOut({ redirect: false })
-    toast({
-      title: "Signed out successfully",
-      description: "Come back soon!",
-    })
+
     router.push('/')
     router.refresh()
   }

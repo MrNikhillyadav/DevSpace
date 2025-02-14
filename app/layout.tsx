@@ -4,13 +4,14 @@ import Navbar from "@/components/Navbar"
 import { getServerSession } from "next-auth"
 import { authOptions } from "./api/auth/[...nextauth]/route"
 import Provider from "@/components/Provider"
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata = {
   title: "Blog Platform",
   description: "A modern blog platform built with Next.js",
+
 }
 
 export default async function RootLayout({
@@ -28,8 +29,8 @@ export default async function RootLayout({
             <Navbar />
             <main className="container mx-auto px-4 py-8">
               {children}
+              <Toaster richColors />
             </main>
-            <Toaster />
           </div>
         </Provider>
       </body>
