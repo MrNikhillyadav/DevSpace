@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { useSession, signOut } from "next-auth/react"
+import {useState} from 'react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,21 +14,27 @@ import { RiNotification2Fill } from "react-icons/ri";
 import { FaPenClip } from "react-icons/fa6";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useRouter } from "next/navigation"
+import {  toast } from 'sonner'
 
 
 export default function Navbar() {
-  const { data: session } = useSession()
-  const router = useRouter()
+  const { data: session } = useSession();
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const handleSignOut = async () => {
+    const loadId = toast.loading('Signing in...');
+    setIsLoading(true)
 
-    await signOut({ redirect: false })
+     await signOut({ redirect: false })
 
-    router.push('/')
-    router.refresh()
+    toast.dismiss(loadId);
+    router.push('/login')
+    toast.success('Logged out');
+    router.refresh();
+    setIsLoading(false);
+    
   }
-
-
   return (
     <nav className="border-b px-20 ">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">

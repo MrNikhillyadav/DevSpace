@@ -22,10 +22,7 @@ async function getLatestPosts() {
 }
 
 export default async function Feed() {
-  const session = await getServerSession()
-  if(!session){
-    redirect('/')
-  }
+  
   const posts = await getLatestPosts()
 
   return (

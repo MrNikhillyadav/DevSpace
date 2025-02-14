@@ -1,7 +1,7 @@
 
 export default function LandingPage(){
     return (
-        <div> 
+        <div className='text-center'> 
             Landing Page
         </div>
     )

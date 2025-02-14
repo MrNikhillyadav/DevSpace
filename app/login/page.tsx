@@ -28,11 +28,7 @@ export default function LoginPage() {
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get("callbackUrl") || "/"
   const [error, setError] = useState<string | null>(null)
-  const [requiredError, setRequiredError] = useState({
-    emailReq: false,
-    passReq: false,
-  });
-
+  
   // Handle redirect in useEffect instead of conditional rendering
   useEffect(() => {
     if (session) {
@@ -69,7 +65,7 @@ export default function LoginPage() {
       toast.dismiss(loadId);
       if (!res?.error) {
         router.push('/');
-        toast.success('Signed In');
+        toast.success(`Signed In`);
       } else {
         if (res.status === 401) {
           toast.error('Invalid Credentials, try again!');
