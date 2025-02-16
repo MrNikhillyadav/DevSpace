@@ -1,8 +1,8 @@
 
-export default function NotificationsPage(){
+export default function ExplorePage(){
     return (
         <div className="` h-full text-center border"> 
-            Notifications
+            Explore
         </div>
     )
 }
