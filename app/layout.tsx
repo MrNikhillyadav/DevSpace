@@ -25,9 +25,9 @@ export default async function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Provider session={session}>
-          <div className="min-h-screen bg-background">
+          <div className="min-h-screen  bg-background">
             <Navbar />
-            <main className="container mx-auto px-4 py-8">
+            <main className="container bg-primary-foreground mx-auto px-4 py-8">
               {children}
               <Toaster richColors />
             </main>

@@ -11,12 +11,12 @@ const Editor = dynamic(
   { ssr: false },
 );
 
-export default forwardRef<Object, EditorProps>(
+export default forwardRef<object, EditorProps>(
   function RichTextEditor(props, ref) {
     return (
       <Editor
         editorClassName={cn(
-          "border outline-none rounded-md px-3 min-h-[150px] ",
+          "border outline-none rounded-md px-3 min-h-[200px] ",
           props.editorClassName,
         )}
         toolbar={{

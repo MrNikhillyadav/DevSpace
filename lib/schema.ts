@@ -9,23 +9,10 @@ export const formSchema = z.object({
   }),
 });
 
+
 export const newBlogSchema = z.object({
-  title: z.string(),
-  content : z.string().max(5000).optional(),
-})
+  title: z.string().min(1, "Title is required").max(100, "Title is too long"),
+  content: z.string().min(1, "Content is required").max(5000, "Content is too long"),
+});
 
 export type CreateNewBlogSchemaValues = z.infer<typeof newBlogSchema>;
-
-
-
-
-// model Post {
-//   id        String   @id @default(cuid())
-//   title     String
-//   content   String   @db.Text
-//   published Boolean  @default(false)
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-//   authorId  String
-//   author    User     @relation(fields: [authorId], references: [id])
-// }
