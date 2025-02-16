@@ -60,11 +60,11 @@ export default function Navbar() {
     <nav className="border-b px-20 ">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <div className="flex items-center space-x-8">
-          <Link href="/" className="text-xl font-bold">
+          <Link href="/feed" className="text-xl font-bold">
             <span className="text-2xl tracking-tighter text-primary font-bold">nova.</span>
           </Link>
           <div className="hidden md:flex space-x-6">
-            <Link href="/" className="text-sm font-medium hover:text-primary">Feed</Link>
+            <Link href="/feed" className="text-sm font-medium hover:text-primary">Feed</Link>
             <Link href="/settings" className="text-sm font-medium hover:text-primary">Settings</Link>
           </div>
         </div>
