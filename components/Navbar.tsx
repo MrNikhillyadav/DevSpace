@@ -65,7 +65,7 @@ export default function Navbar() {
           </Link>
           <div className="hidden md:flex space-x-6">
             <Link href="/" className="text-sm font-medium hover:text-primary">Feed</Link>
-            <Link href="/explore" className="text-sm font-medium hover:text-primary">Explore</Link>
+            <Link href="/settings" className="text-sm font-medium hover:text-primary">Settings</Link>
           </div>
         </div>
 
