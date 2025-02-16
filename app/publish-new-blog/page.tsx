@@ -1,132 +1,133 @@
-"use client";
+'use client';
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
-import LoadingButton from "@/components/LoadingButton";
-import RichTextEditor from "@/components/RichTextEditor";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { CreateNewBlogSchemaValues,newBlogSchema } from "@/lib/schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { draftToMarkdown } from "markdown-draft-js";
-import { useForm } from "react-hook-form";
-import {publishNewBlogPost}  from "./action";
+import React, { useState, useRef } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { publishNewBlogPost } from "./action";
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
+import {revalidatePath} from 'next/cache'
 
+const PublishNewBlog = () => {
+  const router = useRouter();
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
+  const contentRef = useRef(null);
 
-export default function PublishNewBlog() {
-  const form = useForm<CreateNewBlogSchemaValues>({
-    resolver: zodResolver(newBlogSchema),
-  });
-
-  const {
-    handleSubmit,
-    control,
-    setFocus,
-    formState: { isSubmitting },
-  } = form;
-
-  async function onSubmit(values: CreateNewBlogSchemaValues) {
-    const formData = new FormData();
-  
-    Object.entries(values).forEach(([key, value]) => {
-      if (value instanceof File) {
-        formData.append(key, value);
-      } else if (typeof value === "object" && value !== null) {
-        formData.append(key, JSON.stringify(value));
-      } else if (value) {
-        formData.append(key, value.toString());
-      }
-    });
-  
-    console.log("FormData entries:");
-    for (let pair of formData.entries()) {
-      console.log(pair[0], pair[1]);
+  const validateForm = () => {
+    if (!title.trim()) {
+      setError('Title is required');
+      return false;
     }
-  
-    try {
-      await publishNewBlogPost(formData);
-    } catch (error) {
-      alert("Something went wrong, please try again.");
+    if (!content.trim()) {
+      setError('Content is required');
+      return false;
     }
+    return true;
+  };
+
+  const handleSubmit = async (e) => {
+    const loadId = toast.loading('Publishing ...');
+    e.preventDefault();
+    setError('');
+
+    if (!validateForm()) {
+      toast.dismiss(loadId);
+      return;
+    }
+
+    setIsSubmitting(true);
+
+      const res = await publishNewBlogPost({
+        title: title.trim(),
+        content: content.trim()
+      });
+      
+      toast.dismiss(loadId);
+
+      if (!res?.error) {
+        router.push('/feed');
+        toast.success('Published successfully');
+      } else {
+        if (res.status === 401) {
+          toast.error('Invalid input, try again!');
+        } else if (res.status === 400) {
+          toast.error('Missing content!');
+        } else if (res.status === 404) {
+          toast.error('Account not found!');
+        } else if (res.status === 403) {
+          toast.error('Forbidden!');
+        } else {
+          toast.error('oops something went wrong..!');
+        }
+      
+      revalidatePath('/feed')
+      setIsSubmitting(false);   
   }
-  
+};
 
   return (
-    <main className="m-auto my-6 max-w-4xl space-y-10">
-      <div className="space-y-6 rounded-lg  p-4">
-        <Form {...form}>
-          <form
-            className="space-y-4"
-            noValidate
-            onSubmit={handleSubmit(onSubmit)}
-          >
-            <FormField
-              control={control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input placeholder="Article Title ...." {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+    <main className="m-auto my-6 max-w-4xl">
+      <Card>
+        <CardContent className="p-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {error && (
+              <Alert variant="destructive">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
 
-            {/* // TODO: ADD BLOG BANNER HERE
-            <FormField
-              control={control}
-              name="companyLogo"
-              render={({ field: { value, ...fieldValues } }) => (
-                <FormItem>
-                  <FormLabel>Company logo</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...fieldValues}
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        fieldValues.onChange(file);
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+            <div className="space-y-2">
+              <Label htmlFor="title">Title</Label>
+              <Input
+                id="title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Article Title..."
+                className="w-full"
+                maxLength={100}
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="content">Content</Label>
+              <textarea
+                id="content"
+                ref={contentRef}
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                className="w-full min-h-[200px] p-2 border rounded-md"
+                placeholder="Write your article content here..."
+                maxLength={5000}
+                required
+              />
+            </div>
+
+            <Button 
+              type="submit" 
+              className="w-full"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <div className="flex items-center justify-center">
+                  <div className="w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin mr-2" />
+                  Publishing...
+                </div>
+              ) : (
+                'Publish'
               )}
-            /> */}
-           
-            <FormField
-              control={control}
-              name="content"
-              render={({ field }) => (
-                <FormItem>
-                  <Label onClick={() => setFocus("content")}>
-                    Description
-                  </Label>
-                  <FormControl>
-                    <RichTextEditor
-                      onChange={(draft) =>
-                        field.onChange(draftToMarkdown(draft))
-                      }
-                      ref={field.ref}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <LoadingButton type="submit" loading={isSubmitting}>
-              Publish
-            </LoadingButton>
+            </Button>
           </form>
-        </Form>
-      </div>
+        </CardContent>
+      </Card>
     </main>
   );
-}
+};
+
+export default PublishNewBlog;
