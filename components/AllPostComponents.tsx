@@ -79,10 +79,10 @@ export default function AllPostComponents({ posts }: AllPostComponentsProps) {
   };
 
   return (
-    <div className="space-y-6 py-8 pt-20  bg-zinc-900 min-h-screen">
+    <div className="space-y-6 py-8 pt-20 flex flex-col justify-center items-center  bg-zinc-900 min-h-screen">
       <section className="text-center space-y-4 max-w-[900px] mx-auto px-4">
         <h1 className="text-4xl font-bold tracking-tight text-white">
-          Welcome to <span className="text-indigo-500">nova</span> blog
+          Welcome to <span className="text-indigo-500">DevSpace</span>
         </h1>
         <p className="text-lg text-zinc-400">
           Discover stories, thinking, and expertise from developers worldwide.

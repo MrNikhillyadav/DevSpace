@@ -19,7 +19,7 @@ async function getLatestPosts() {
 export default async function Feed() {
   const session = await getServerSession()
   if(!session?.user){
-    redirect('/')
+    redirect('/login')
   }
   const posts = await getLatestPosts()
 

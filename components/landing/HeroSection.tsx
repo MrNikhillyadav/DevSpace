@@ -1,9 +1,8 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import {  ArrowRight,  BookOpen, Code,  } from 'lucide-react';
 import { Spotlight } from './Spotlight';
-import {Link} from 'next/navigation'
+import Link from 'next/link'
 
 
 export const HeroSection = () => (
@@ -26,13 +25,16 @@ export const HeroSection = () => (
       </p>
   
       <div className="flex items-center justify-center gap-4">
-        <Button className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-6">
-          Start Writing
-        </Button>
-        <Button variant="outline" className="text-black hover:text-white border-zinc-700 hover:bg-zinc-800 px-8 py-6">
-           <BookOpen size={16} className="mr-2" /> Explore Articles 
-        </Button>
+        <Link href="/feed">
+          <Button className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-6">
+            Start Writing
+          </Button>
+        </Link>
+        <Link href="/feed">
+          <Button variant="outline" className="text-black hover:text-white border-zinc-700 hover:bg-zinc-800 px-8 py-6">
+             <BookOpen size={16} className="mr-2" /> Explore Articles 
+          </Button>
+        </Link>
       </div>
     </Spotlight>
   );
-  
