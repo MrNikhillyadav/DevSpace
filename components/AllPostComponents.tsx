@@ -1,11 +1,15 @@
+"use client"
 
 import Link from "next/link"
-
+import { useState } from "react"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { FaRegHeart } from "react-icons/fa";
-import { FiShare2 } from "react-icons/fi";
-import { BsBookmarkPlus } from "react-icons/bs";
+import { Badge } from "@/components/ui/badge"
+import { FaRegHeart, FaHeart } from "react-icons/fa"
+import { FiShare2 } from "react-icons/fi"
+import { BsBookmarkPlus, BsBookmarkFill } from "react-icons/bs"
+import { BiCommentDetail } from "react-icons/bi"
+import { Code, Terminal } from "lucide-react"
 
 interface PostInterface {
     id: string;
@@ -17,78 +21,155 @@ interface PostInterface {
     emailVerified: Date | null;
     password: string | null;
     bio: string | null;
-    title:string | null;
-    content:string | null;
-    author:{
+    title: string | null;
+    content: string | null;
+    author: {
       image: string | null;
       name: string | null;
     }
-   
-  }
+}
 
-  interface AllPostComponentsProps {
+interface AllPostComponentsProps {
     posts: PostInterface[];
 }
-  
 
-export default async function AllPostComponents({posts}:AllPostComponentsProps) {
+// New components to enhance the blog
+const TrendingTopics = () => (
+  <div className="flex gap-2 overflow-x-auto pb-4 max-w-[900px] mx-auto">
+    {["React", "TypeScript", "Next.js", "Node.js", "Python", "AWS", "DevOps"].map((topic) => (
+      <Badge
+        key={topic}
+        variant="secondary"
+        className="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 cursor-pointer px-4 py-2"
+      >
+        {topic}
+      </Badge>
+    ))}
+  </div>
+);
+
+export default function AllPostComponents({ posts }: AllPostComponentsProps) {
+  const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
+  const [savedPosts, setSavedPosts] = useState<Set<string>>(new Set());
+
+  const toggleLike = (postId: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    setLikedPosts(prev => {
+      const newLiked = new Set(prev);
+      if (newLiked.has(postId)) {
+        newLiked.delete(postId);
+      } else {
+        newLiked.add(postId);
+      }
+      return newLiked;
+    });
+  };
+
+  const toggleSave = (postId: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    setSavedPosts(prev => {
+      const newSaved = new Set(prev);
+      if (newSaved.has(postId)) {
+        newSaved.delete(postId);
+      } else {
+        newSaved.add(postId);
+      }
+      return newSaved;
+    });
+  };
 
   return (
-    <div className=" space-y-2 max-w-[900px] mx-auto  rounded-lg ">
-      <section className="text-center space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight ">Welcome to <span className="text-primary ">nova</span> blog</h1>
-        <p className="text-md text-muted-foreground">
-          Discover stories, thinking, and expertise from writers on any topic.
+    <div className="space-y-6 py-8 pt-20  bg-zinc-900 min-h-screen">
+      <section className="text-center space-y-4 max-w-[900px] mx-auto px-4">
+        <h1 className="text-4xl font-bold tracking-tight text-white">
+          Welcome to <span className="text-indigo-500">nova</span> blog
+        </h1>
+        <p className="text-lg text-zinc-400">
+          Discover stories, thinking, and expertise from developers worldwide.
         </p>
       </section>
 
-      <section className="grid grid-cols-1  gap-4 ">
+      <TrendingTopics />
+
+      <section className="grid grid-cols-1  gap-6 max-w-[900px] mx-auto px-4">
         {posts.map((post) => (
-          <Card key={post.id} className='shadow-sm' >
+          <Card key={post.id} className="bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800/80 transition-colors">
             <Link href={`/post/${post.id}`}>
-             
-              <CardFooter>
+              <CardHeader className="pb-4">
                 <div className="flex items-center space-x-4">
                   <Avatar>
                     <AvatarImage src={post.author.image || undefined} />
-                    <AvatarFallback>
-                      <p className="line-clamp-3 text-sm  text-muted-foreground">
-                        {post.author.name?.charAt(0) || "U"}
-                      </p>
+                    <AvatarFallback className="bg-indigo-600 text-white">
+                      {post.author.name?.charAt(0) || "U"}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="flex flex-col justify-center items-center ">
-                    <span className="text-sm font-medium">{post.author.name}</span>
-                    <span className="text-[12px] text-muted-foreground">
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium text-white">{post.author.name}</span>
+                    <span className="text-xs text-zinc-400">
                       {new Date(post.createdAt).toLocaleDateString()}
                     </span>
                   </div>
                 </div>
-              </CardFooter>
-              <CardHeader>
-                <CardTitle className=" line-clamp-3 text-black/80 p-1">{post.title}</CardTitle>
               </CardHeader>
-              <CardContent>
-                <p className="line-clamp-3 text-sm  text-muted-foreground">
-                  {post.content.substring(0, 150)}...
-                </p>
-              <div className='flex justify-between gap-2  items-center pt-3'> 
-                  <div>
-                    <div className='flex justify-between gap-2  items-center'>
-                       <FaRegHeart className='text-lg  hover:fill-red-600' />
-                       <p className='text-xs '> {Math.floor(Math.random()*100)} Likes</p>
-                    </div>
+              
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <CardTitle className="text-xl text-white">{post.title}</CardTitle>
+                  <p className="text-zinc-400 line-clamp-3">
+                    {post.content?.substring(0, 150)}...
+                  </p>
+                </div>
+
+                {/* Tech stack badges */}
+                <div className="flex gap-2">
+                  <Badge variant="outline" className="text-indigo-400 border-indigo-400/30">
+                    <Code className="w-3 h-3 mr-1" />
+                    React
+                  </Badge>
+                  <Badge variant="outline" className="text-indigo-400 border-indigo-400/30">
+                    <Terminal className="w-3 h-3 mr-1" />
+                    TypeScript
+                  </Badge>
+                </div>
+
+                <div className="flex justify-between items-center pt-4 border-t border-zinc-700">
+                  <div className="flex gap-6">
+                    <button 
+                      onClick={(e) => toggleLike(post.id, e)}
+                      className="flex items-center gap-2 text-zinc-400 hover:text-indigo-400"
+                    >
+                      {likedPosts.has(post.id) ? 
+                        <FaHeart className="text-indigo-500" /> : 
+                        <FaRegHeart />
+                      }
+                      <span className="text-sm">{Math.floor(Math.random() * 100)}</span>
+                    </button>
+                    <button className="flex items-center gap-2 text-zinc-400 hover:text-indigo-400">
+                      <BiCommentDetail />
+                      <span className="text-sm">{Math.floor(Math.random() * 20)}</span>
+                    </button>
                   </div>
-                  <div className="flex justify-between gap-2  items-center">
-                  <FiShare2 />
-                  <BsBookmarkPlus />
+                  
+                  <div className="flex gap-4">
+                    <button className="text-zinc-400 hover:text-indigo-400">
+                      <FiShare2 className="w-5 h-5" />
+                    </button>
+                    <button 
+                      onClick={(e) => toggleSave(post.id, e)}
+                      className="text-zinc-400 hover:text-indigo-400"
+                    >
+                      {savedPosts.has(post.id) ? 
+                        <BsBookmarkFill className="text-indigo-500" /> : 
+                        <BsBookmarkPlus />
+                      }
+                    </button>
                   </div>
-              </div>
+                </div>
               </CardContent>
             </Link>
           </Card>
         ))}
       </section>
     </div>
-  )
+  );
 }

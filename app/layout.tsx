@@ -1,10 +1,10 @@
-import { Inter } from "next/font/google"
 import "./globals.css"
-import Navbar from "@/components/Navbar"
+import { Inter } from "next/font/google"
 import { getServerSession } from "next-auth"
 import { authOptions } from "./api/auth/[...nextauth]/route"
 import Provider from "@/components/Provider"
 import { Toaster } from "sonner";
+import Navbar  from "@/components/Navbar"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -19,15 +19,15 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const session = await getServerSession(authOptions)
+  const session = await getServerSession()
 
   return (
     <html lang="en">
       <body className={inter.className}>
         <Provider session={session}>
-          <div className="min-h-screen  bg-background">
+          <div className="min-h-screen">
             <Navbar />
-            <main className="container bg-primary-foreground mx-auto px-4 py-8">
+            <main className="container bg-gradient-to-br from-black to-zinc-900 mx-auto ">
               {children}
               <Toaster richColors />
             </main>

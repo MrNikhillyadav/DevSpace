@@ -10,6 +10,15 @@ export default {
   theme: {
   	extend: {
   		colors: {
+			indigo: {
+				400: '#818cf8',
+				600: '#6366f1',
+				700: '#4f46e5',
+			  },
+			  zinc: {
+				800: '#27272a',
+				900: '#18181b',
+			  },
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {

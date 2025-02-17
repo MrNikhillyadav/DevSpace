@@ -12,10 +12,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { RiNotification2Fill } from "react-icons/ri";
 import { FaPenClip } from "react-icons/fa6";
+import { Code, ChevronDown } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useRouter } from "next/navigation";
 import { toast } from 'sonner';
-import NotificationCard from "@/components/NotificationCard"; // Import the NotificationCard component
+import NotificationCard from "@/components/NotificationCard";
 
 export default function Navbar() {
   const { data: session } = useSession();
@@ -57,41 +58,57 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="border-b px-20 ">
+    <nav className=" backdrop-blur-md fixed w-full z-50">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <div className="flex items-center space-x-8">
-          <Link href="/feed" className="text-xl font-bold">
-            <span className="text-2xl tracking-tighter text-primary font-bold">nova.</span>
-          </Link>
-          <div className="hidden md:flex space-x-6">
-            <Link href="/feed" className="text-sm font-medium hover:text-primary">Feed</Link>
-            <Link href="/settings" className="text-sm font-medium hover:text-primary">Settings</Link>
+        {/* Logo Section */}
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 bg-indigo-600 rounded flex items-center justify-center">
+            <Code className="w-5 h-5 text-white" />
           </div>
+          <Link href="/" className="text-xl font-semibold text-white">
+            DevSpace<span className="text-indigo-500">.</span>
+          </Link>
         </div>
 
-        <div className="flex items-center space-x-4">
+        {/* Navigation Links */}
+        <div className="hidden md:flex items-center gap-8">
+          <Link href="/feed" className="text-zinc-400 hover:text-white text-sm transition-colors">
+            Feed
+          </Link>
+          <div className="flex items-center gap-1 text-zinc-400 hover:text-white text-sm cursor-pointer transition-colors">
+            Explore <ChevronDown size={14} />
+          </div>
+          <Link href="/settings" className="text-zinc-400 hover:text-white text-sm transition-colors">
+            Settings
+          </Link>
+        </div>
+
+        {/* Auth Section */}
+        <div className="flex items-center gap-4">
           {session ? (
             <>
-              <Button asChild>
+              <Button 
+                asChild
+                className="bg-indigo-600 hover:bg-indigo-700 rounded-full w-10 h-10 p-0"
+              >
                 <Link href="/publish-new-blog">
-                  <FaPenClip />
+                  <FaPenClip className="w-4 h-4" />
                 </Link>
               </Button>
 
               <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <Button asChild variant="outline">
-                    <Link href="/notifications">
-                      <RiNotification2Fill />
-                    </Link>
+                <DropdownMenuTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    className="rounded-full w-10 h-10 p-0 text-zinc-400 hover:text-white border border-zinc-700"
+                  >
+                    <RiNotification2Fill className="w-5 h-5" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-60 ">
-                  <div className="px-2 py-1.5 text-sm font-medium ">
+                <DropdownMenuContent align="end" className="w-80 bg-zinc-900 border-zinc-800">
+                  <div className="px-4 py-3 text-sm font-medium text-white border-b border-zinc-800">
                     Latest Notifications
                   </div>
-
-                  {/* Render notifications */}
                   {notifications.map(notification => (
                     <NotificationCard
                       key={notification.id}
@@ -103,33 +120,52 @@ export default function Navbar() {
                 </DropdownMenuContent>
               </DropdownMenu>
 
-              <Button onClick={handleSignOut} variant="outline" className="cursor-pointer" asChild>
-                <span>Logout</span>
-              </Button>
-
               <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <Avatar>
-                    <AvatarImage src={session.user?.image || undefined} />
-                    <AvatarFallback>{session.user?.name?.charAt(0) || "U"}</AvatarFallback>
-                  </Avatar>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="rounded-full p-0 h-10 w-10">
+                    <Avatar>
+                      <AvatarImage src={session.user?.image || undefined} />
+                      <AvatarFallback className="bg-indigo-600 text-white">
+                        {session.user?.name?.charAt(0) || "U"}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48">
-                  <div className="px-2 py-1.5 text-sm font-medium text-muted-foreground">
-                    {session.user?.email}
+                <DropdownMenuContent align="end" className="w-56 bg-zinc-900 border-zinc-800">
+                  <div className="px-4 py-3 border-b border-zinc-800">
+                    <p className="text-sm font-medium text-white">{session.user?.name}</p>
+                    <p className="text-xs text-zinc-400">{session.user?.email}</p>
                   </div>
-                  {/* Other dropdown items */}
-                  <DropdownMenuItem asChild><Link href="/profile">Profile</Link></DropdownMenuItem>
-                  <DropdownMenuItem asChild><Link href="/notifications">Notifications</Link></DropdownMenuItem>
-                  <DropdownMenuItem asChild><Link href="/dashboard">Dashboard</Link></DropdownMenuItem>
-                  <DropdownMenuItem onClick={handleSignOut} className="text-red-600 focus:text-red-600">Sign Out</DropdownMenuItem>
+                  <DropdownMenuItem asChild className="hover:bg-zinc-800">
+                    <Link href="/profile" className="text-zinc-300">Profile</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild className="hover:bg-zinc-800">
+                    <Link href="/dashboard" className="text-zinc-300">Dashboard</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem 
+                    onClick={handleSignOut} 
+                    className="text-red-400 hover:text-red-400 hover:bg-red-500/10"
+                  >
+                    Sign Out
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </>
           ) : (
             <>
-              <Button variant="ghost" asChild><Link href="/login">Sign In</Link></Button>
-              <Button asChild><Link href="/register">Get Started</Link></Button>
+              <Button 
+                variant="ghost" 
+                asChild 
+                className="text-zinc-400 hover:text-white"
+              >
+                <Link href="/login">Sign In</Link>
+              </Button>
+              <Button 
+                asChild 
+                className="bg-indigo-600 hover:bg-indigo-700 text-white"
+              >
+                <Link href="/register">Get Started</Link>
+              </Button>
             </>
           )}
         </div>

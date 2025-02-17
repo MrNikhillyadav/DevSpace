@@ -1,5 +1,7 @@
 import prisma  from "@/lib/db"
 import AllPostComponents from "@/components/AllPostComponents";
+import {getServerSession} from "next-auth";
+import { redirect } from "next/navigation";
 
 async function getLatestPosts() {
   const posts = await prisma.post.findMany({
@@ -14,14 +16,17 @@ async function getLatestPosts() {
   return posts
 }
 
-
-
 export default async function Feed() {
-
+  const session = await getServerSession()
+  if(!session?.user){
+    redirect('/')
+  }
   const posts = await getLatestPosts()
-  console.log('posts: ', posts);
+
 
   return (
-    <AllPostComponents posts={posts}/>
+    <div>
+      <AllPostComponents posts={posts}/>
+    </div>
   )
 }

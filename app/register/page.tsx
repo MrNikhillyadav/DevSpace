@@ -19,7 +19,8 @@ import { Input } from "@/components/ui/input"
 import { Icons } from "@/components/icons"
 import { useSession } from "next-auth/react"
 import { redirect } from "next/navigation"
-import { toast } from 'sonner';
+import { toast } from 'sonner'
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -57,136 +58,157 @@ export default function RegisterPage() {
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const loadId = toast.loading('Signing up...');
+    const loadId = toast.loading('Signing up...')
     setIsLoading(true)
 
     if (!values.email || !values.password) {
-      toast.error('email and password missing!')
-      toast.dismiss(loadId);
-      return;
+      toast.error('Email and password missing!')
+      toast.dismiss(loadId)
+      return
     }
     
-      const res = await fetch("/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: values.name,
-          email: values.email,
-          password: values.password,
-        }),
-      })
+    const res = await fetch("/api/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: values.name,
+        email: values.email,
+        password: values.password,
+      }),
+    })
 
-      toast.dismiss(loadId);
-      if (!res?.error) {
-        router.push('/login');
-        toast.success('Signed Up successfully');
+    toast.dismiss(loadId)
+    if (!res?.error) {
+      router.push('/login')
+      toast.success('Signed Up successfully')
+    } else {
+      if (res.status === 401) {
+        toast.error('Invalid Credentials, try again!')
+      } else if (res.status === 400) {
+        toast.error('Missing Credentials!')
+      } else if (res.status === 404) {
+        toast.error('Account not found!')
+      } else if (res.status === 403) {
+        toast.error('Forbidden!')
       } else {
-        if (res.status === 401) {
-          toast.error('Invalid Credentials, try again!');
-        } else if (res.status === 400) {
-          toast.error('Missing Credentials!');
-        } else if (res.status === 404) {
-          toast.error('Account not found!');
-        } else if (res.status === 403) {
-          toast.error('Forbidden!');
-        } else {
-          toast.error('oops something went wrong..!');
-        }
-
-        setIsLoading(false)
-
+        toast.error('Oops something went wrong..!')
       }
-    
+      setIsLoading(false)
+    }
   }
+
   return (
-    <div className="container max-w-md mx-auto mt-16">
-      <div className="space-y-6">
-        <div className="space-y-2 text-center">
-          <h1 className="text-2xl font-bold">Create an account</h1>
-          <p className="text-muted-foreground">
+    <div className="min-h-screen  bg-zinc-900 flex items-center justify-center px-4">
+      <Card className="w-full max-w-md mt-12 bg-zinc-800/50 border-zinc-700">
+        <CardHeader className="space-y-2 text-center pb-4">
+          <CardTitle className="text-2xl font-bold text-white">
+            Join <span className="text-indigo-500">DevSpace.</span> today
+          </CardTitle>
+          <p className="text-zinc-400">
             Enter your information to create an account
           </p>
-        </div>
+        </CardHeader>
+        <CardContent>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-zinc-300">Name</FormLabel>
+                    <FormControl>
+                      <Input 
+                        placeholder="John Doe" 
+                        {...field} 
+                        className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-400" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-zinc-300">Email</FormLabel>
+                    <FormControl>
+                      <Input 
+                        placeholder="name@example.com" 
+                        {...field}
+                        className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-400" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-zinc-300">Password</FormLabel>
+                    <FormControl>
+                      <Input 
+                        type="password" 
+                        {...field}
+                        className="bg-zinc-800 border-zinc-700 text-white"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-400" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-zinc-300">Confirm Password</FormLabel>
+                    <FormControl>
+                      <Input 
+                        type="password" 
+                        {...field}
+                        className="bg-zinc-800 border-zinc-700 text-white"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-400" />
+                  </FormItem>
+                )}
+              />
+              {form.formState.errors.root && (
+                <p className="text-red-400 text-sm">
+                  {form.formState.errors.root.message}
+                </p>
+              )}
+              <Button 
+                type="submit" 
+                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
+                disabled={isLoading}
+              >
+                {isLoading && (
+                  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                Create Account
+              </Button>
+            </form>
+          </Form>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="John Doe" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input placeholder="name@example.com" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input type="password" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="confirmPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Confirm Password</FormLabel>
-                  <FormControl>
-                    <Input type="password" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {form.formState.errors.root && (
-              <p className="text-sm text-red-500">
-                {form.formState.errors.root.message}
-              </p>
-            )}
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading && (
-                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-              )}
-              Create Account
-            </Button>
-          </form>
-        </Form>
-
-        <div className="text-center space-y-2">
-          <div className="text-sm text-muted-foreground">
-            Already have an account?{" "}
-            <Link href="/login" className="text-primary hover:underline">
-              Sign in
-            </Link>
+          <div className="mt-6 text-center">
+            <div className="text-sm text-zinc-400">
+              Already have an account?{" "}
+              <Link href="/login" className="text-indigo-400 hover:underline">
+                Sign in
+              </Link>
+            </div>
           </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }
