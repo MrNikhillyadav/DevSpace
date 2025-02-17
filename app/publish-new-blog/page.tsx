@@ -1,7 +1,12 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
@@ -9,7 +14,9 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { publishNewBlogPost } from "./action";
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link'; // Import Link for navigation
 import {revalidatePath} from 'next/cache'
+import { Icons } from "@/components/icons"
 
 const PublishNewBlog = () => {
   const router = useRouter();
@@ -72,10 +79,15 @@ const PublishNewBlog = () => {
 };
 
   return (
-    <main className="m-auto my-6 max-w-4xl">
-      <Card>
-        <CardContent className="p-6">
-          <form onSubmit={handleSubmit} className="space-y-6">
+    <div className="min-h-screen bg-zinc-900 flex items-center justify-center px-4">
+      <Card className="w-full max-w-md bg-zinc-800/50 border-zinc-700">
+        <CardHeader className="space-y-2 text-center pb-4">
+          <CardTitle className="text-2xl font-bold text-white">
+            Publish New Article
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
               <Alert variant="destructive">
                 <AlertDescription>{error}</AlertDescription>
@@ -83,26 +95,26 @@ const PublishNewBlog = () => {
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="title">Title</Label>
+              <Label htmlFor="title" className="text-zinc-300">Title</Label>
               <Input
                 id="title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Article Title..."
-                className="w-full"
+                className="w-full bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
                 maxLength={100}
                 required
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="content">Content</Label>
+              <Label htmlFor="content" className="text-zinc-300">Content</Label>
               <textarea
                 id="content"
                 ref={contentRef}
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                className="w-full min-h-[200px] p-2 border rounded-md"
+                className="w-full min-h-[200px] p-2 border rounded-md bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
                 placeholder="Write your article content here..."
                 maxLength={5000}
                 required
@@ -111,12 +123,12 @@ const PublishNewBlog = () => {
 
             <Button 
               type="submit" 
-              className="w-full"
+              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
               disabled={isSubmitting}
             >
               {isSubmitting ? (
                 <div className="flex items-center justify-center">
-                  <div className="w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin mr-2" />
+                  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                   Publishing...
                 </div>
               ) : (
@@ -124,14 +136,16 @@ const PublishNewBlog = () => {
               )}
             </Button>
           </form>
+
+          <div className="mt-6 text-center">
+            <Link href="/feed" className="text-indigo-400 hover:underline">
+              Cancel
+            </Link>
+          </div>
         </CardContent>
       </Card>
-    </main>
+    </div>
   );
 };
 
 export default PublishNewBlog;
-
-
-
-
