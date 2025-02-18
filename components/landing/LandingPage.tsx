@@ -4,7 +4,7 @@ import {FeaturesGrid} from './FeaturesGrid'
 
 const LandingPage = () => {
   return (
-    <div className=" bg-gradient-to-br from-black to-zinc-900">
+    <div className=" bg-gradient-to-br px-8 from-black to-zinc-900">
       <HeroSection />
       <FeaturesGrid />
     </div>

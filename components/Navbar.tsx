@@ -58,7 +58,7 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className=" backdrop-blur-md fixed w-full z-50">
+    <nav className="px-12 backdrop-blur-sm fixed w-full z-50">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo Section */}
         <div className="flex items-center gap-2">

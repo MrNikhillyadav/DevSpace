@@ -30,7 +30,7 @@ export default async function RootLayout({
           <div className="min-h-screen">
             <Navbar />
             <main 
-              className="container bg-gradient-to-br from-black to-zinc-900 mx-auto "
+              className="container bg-gradient-to-br from-black  to-zinc-900 mx-auto "
               >
               {children}
               <Toaster richColors />
