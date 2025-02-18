@@ -33,7 +33,7 @@ interface AllPostComponentsProps {
     posts: PostInterface[];
 }
 
-// New components to enhance the blog
+
 const TrendingTopics = () => (
   <div className="flex gap-2 overflow-x-auto pb-4 max-w-[900px] mx-auto">
     {["React", "TypeScript", "Next.js", "Node.js", "Python", "AWS", "DevOps"].map((topic) => (
@@ -106,7 +106,7 @@ export default function AllPostComponents({ posts }: AllPostComponentsProps) {
                   <div className="flex flex-col">
                     <span className="text-sm font-medium text-white">{post.author.name}</span>
                     <span className="text-xs text-zinc-400">
-                      {new Date(post.createdAt).toLocaleDateString()}
+                      {/* {new Date(post.createdAt).toLocaleDateString()} */}
                     </span>
                   </div>
                 </div>
@@ -142,11 +142,11 @@ export default function AllPostComponents({ posts }: AllPostComponentsProps) {
                         <FaHeart className="text-indigo-500" /> : 
                         <FaRegHeart />
                       }
-                      <span className="text-sm">{Math.floor(Math.random() * 100)}</span>
+                      <span className="text-sm">{38}</span>
                     </button>
                     <button className="flex items-center gap-2 text-zinc-400 hover:text-indigo-400">
                       <BiCommentDetail />
-                      <span className="text-sm">{Math.floor(Math.random() * 20)}</span>
+                      <span className="text-sm">{15}</span>
                     </button>
                   </div>
                   
