@@ -2,7 +2,6 @@
 
 import prisma from "@/lib/db";
 import { newBlogSchema } from "@/lib/schema";
-import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
 
@@ -16,7 +15,7 @@ export async function publishNewBlogPost(data: { title: string; content: string 
       data: { 
         title: validatedData.title,
         content: validatedData.content,
-        authorId: "cm74m661u0000v064mragf7ry",
+        authorId: "cm7ae0rbf0006v0g8cu1u02wx",
         published: true
       }
     });

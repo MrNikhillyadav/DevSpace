@@ -11,6 +11,11 @@ async function getLatestPosts() {
     include: {
       author: true,
     },
+    orderBy: {
+      author: {
+        createdAt: 'desc',
+      },
+    },
 
   })
   return posts
