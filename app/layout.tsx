@@ -1,11 +1,17 @@
 import "./globals.css"
 import { Inter } from "next/font/google"
+import { cn } from '@/lib/utils';
+import { Bricolage_Grotesque } from "next/font/google";
 import { getServerSession } from "next-auth"
 import Provider from "@/components/Provider"
 import { Toaster } from "sonner";
 import Navbar  from "@/components/Navbar"
 
-const inter = Inter({ subsets: ["latin"] })
+const bricolage = Bricolage_Grotesque({
+  variable: "--bricolage-font",
+  subsets: ["latin"],
+  display: "swap",
+});
 
 export const metadata = {
   title: "Blog Platform",
@@ -24,7 +30,10 @@ export default async function RootLayout({
     <html  suppressHydrationWarning={true}  lang="en">
       <body  
           suppressHydrationWarning={true}
-          className={inter.className}
+          className={cn(
+            'font-bricolage antialiased',
+            bricolage.variable,
+          )}
           >
         <Provider session={session}>
           <div className="min-h-screen">
