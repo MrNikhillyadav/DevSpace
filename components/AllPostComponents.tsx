@@ -99,7 +99,7 @@ export default function AllPostComponents({ posts }: AllPostComponentsProps) {
                 <div className="flex items-center space-x-4">
                   <Avatar>
                     <AvatarImage src={post.author.image || undefined} />
-                    <AvatarFallback className="bg-indigo-600 text-white">
+                    <AvatarFallback className="bg-primary text-white">
                       {post.author.name?.charAt(0) || "U"}
                     </AvatarFallback>
                   </Avatar>

@@ -62,7 +62,7 @@ export default function Navbar() {
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo Section */}
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-indigo-600 rounded flex items-center justify-center">
+          <div className="w-8 h-8 bg-primary rounded flex items-center justify-center">
             <Code className="w-5 h-5 text-white" />
           </div>
           <Link href="/" className="text-xl font-semibold text-white">
@@ -89,7 +89,7 @@ export default function Navbar() {
             <>
               <Button 
                 asChild
-                className="bg-indigo-600 hover:bg-indigo-700 rounded-full w-10 h-10 p-0"
+                className="bg-primary hover:bg-indigo-700 rounded-full w-10 h-10 p-0"
               >
                 <Link href="/publish-new-blog">
                   <FaPenClip className="w-4 h-4" />
@@ -125,7 +125,7 @@ export default function Navbar() {
                   <Button variant="ghost" className="rounded-full p-0 h-10 w-10">
                     <Avatar>
                       <AvatarImage src={session.user?.image || undefined} />
-                      <AvatarFallback className="bg-indigo-600 text-white">
+                      <AvatarFallback className="bg-primary text-white">
                         {session.user?.name?.charAt(0) || "U"}
                       </AvatarFallback>
                     </Avatar>
@@ -162,7 +162,7 @@ export default function Navbar() {
               </Button>
               <Button 
                 asChild 
-                className="bg-indigo-600 hover:bg-indigo-700 text-white"
+                className="bg-primary hover:bg-indigo-700 text-white"
               >
                 <Link href="/register">Get Started</Link>
               </Button>

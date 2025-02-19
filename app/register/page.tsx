@@ -188,7 +188,7 @@ export default function RegisterPage() {
               )}
               <Button 
                 type="submit" 
-                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
+                className="w-full bg-primary hover:bg-indigo-700 text-white"
                 disabled={isLoading}
               >
                 {isLoading && (

@@ -58,7 +58,7 @@ export default function ProfilePage() {
 
       if (response.error) {
         toast.dismiss(loadingToast);
-        toast.error(response.error); // Display error message
+        toast.error(response.error); 
         return;
       }
       if (!response.message) throw new Error("Failed to update profile")
@@ -90,7 +90,7 @@ export default function ProfilePage() {
           <div className="flex justify-center">
             <Avatar className="h-24 w-24">
               <AvatarImage src={session?.user?.image || undefined} />
-              <AvatarFallback className="bg-indigo-600 text-2xl text-white">
+              <AvatarFallback className="bg-primary text-2xl text-white">
                 {session?.user?.name?.charAt(0) || "U"}
               </AvatarFallback>
             </Avatar>
@@ -182,7 +182,7 @@ export default function ProfilePage() {
                   <Button
                     type="button"
                     onClick={() => setIsEditing(true)}
-                    className="bg-indigo-600 hover:bg-indigo-700 text-white"
+                    className="bg-primary hover:bg-indigo-700 text-white"
                   >
                     <Pencil className="w-4 h-4 mr-2" />
                     Edit Profile
@@ -201,7 +201,7 @@ export default function ProfilePage() {
                     <Button
                       type="submit"
                       disabled={isLoading}
-                      className="bg-indigo-600 hover:bg-indigo-700 text-white"
+                      className="bg-primary hover:bg-indigo-700 text-white"
                     >
                       {isLoading ? (
                         <Icons.spinner className="w-4 h-4 mr-2 animate-spin" />

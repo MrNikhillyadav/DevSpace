@@ -4,7 +4,7 @@ import { Card } from '@/components/ui/card';
 export const FeatureCard = ({ icon: Icon, title, description, stats }) => (
     <Card className="bg-zinc-800/50 border-zinc-700 p-6">
       <div className="flex items-start gap-4">
-        <div className="p-2 bg-indigo-600/20 rounded-lg">
+        <div className="p-2 bg-primary/20 rounded-lg">
           <Icon className="w-6 h-6 text-indigo-400" />
         </div>
         <div>

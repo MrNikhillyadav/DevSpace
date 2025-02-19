@@ -8,7 +8,7 @@ import Link from 'next/link'
 export const HeroSection = () => (
     <Spotlight className="container mx-auto px-4 pt-24 pb-32 text-center">
       <div className="inline-flex items-center gap-2 bg-zinc-800/50 px-4 py-2 rounded-full mb-8">
-        <span className="w-2 h-2 bg-indigo-600 rounded-full animate-pulse" />
+        <span className="w-2 h-2 bg-primary rounded-full animate-pulse" />
         <span className="text-zinc-300">New Feature</span>
         <span className="text-zinc-400">AI-Powered Code Snippets</span>
         <ArrowRight size={16} className="text-zinc-400" />
@@ -26,7 +26,7 @@ export const HeroSection = () => (
   
       <div className="flex items-center justify-center gap-4">
         <Link href="/feed">
-          <Button className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-6">
+          <Button className="bg-primary hover:bg-indigo-700 text-white px-8 py-6">
             Start Writing
           </Button>
         </Link>

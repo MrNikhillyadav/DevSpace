@@ -64,6 +64,7 @@ export default function LoginPage() {
 
     toast.dismiss(loadId)
     if (!res?.error) {
+      setIsLoading(false)
       router.push('/feed')
       toast.success(`Signed In`)
     } else {
@@ -78,7 +79,6 @@ export default function LoginPage() {
       } else {
         toast.error('Oops something went wrong..!')
       }
-      setIsLoading(false)
     }
   }
 
@@ -137,7 +137,7 @@ export default function LoginPage() {
               )}
               <Button 
                 type="submit" 
-                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
+                className="w-full bg-primary hover:bg-indigo-700 text-white"
                 disabled={isLoading}
               >
                 {isLoading && (

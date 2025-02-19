@@ -14,7 +14,7 @@ export default function SettingsPage() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {/* Add your settings content here */}
+          {/* TODO : Add settings content here */}
           <p className="text-zinc-400">
             Manage your account settings and preferences.
           </p>

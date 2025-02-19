@@ -1,5 +1,4 @@
 import "./globals.css"
-import { Inter } from "next/font/google"
 import { cn } from '@/lib/utils';
 import { Bricolage_Grotesque } from "next/font/google";
 import { getServerSession } from "next-auth"
