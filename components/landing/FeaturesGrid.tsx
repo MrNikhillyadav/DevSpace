@@ -1,6 +1,6 @@
 import React from 'react';
 import { FeatureCard } from './FeatureCard';
-import { ChevronDown, ArrowRight, Search, BookOpen, Code, Terminal, Users } from 'lucide-react';
+import { Code, Terminal, Users } from 'lucide-react';
 
 export  const FeaturesGrid = () => (
     <div className="container mx-auto px-4 pb-24 grid grid-cols-1 md:grid-cols-3 gap-6">

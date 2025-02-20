@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import {  ArrowRight,  BookOpen, Code,  } from 'lucide-react';
+import {  ArrowRight,  BookOpen  } from 'lucide-react';
 import { Spotlight } from './Spotlight';
 import Link from 'next/link'
 

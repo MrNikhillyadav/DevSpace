@@ -146,7 +146,7 @@ export default function Navbar() {
                     onClick={handleSignOut} 
                     className="text-red-400 hover:text-red-400 hover:bg-red-500/10"
                   >
-                    Sign Out
+                    {isLoading ? 'Signing Out' : 'Sign Out'}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
