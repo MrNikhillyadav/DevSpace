@@ -78,6 +78,7 @@ export default function ProfilePage() {
     } catch (error) {
       toast.dismiss(loadingToast)
       toast.error("Failed to update profile");
+      console.log(error)
     } finally {
       setIsLoading(false)
     }

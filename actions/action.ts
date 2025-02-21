@@ -2,6 +2,7 @@
 
 import prisma from '@/lib/db' 
 import { compare, hash } from "bcrypt";
+import { revalidatePath } from 'next/cache'
 
 export const updateProfile = async (values) => {
   const { name, email, currentPassword, newPassword } = values;
@@ -35,5 +36,6 @@ export const updateProfile = async (values) => {
     data: updatedData,
   });
 
+  revalidatePath('/profile')
   return { message: 'Profile updated successfully' };
 };
