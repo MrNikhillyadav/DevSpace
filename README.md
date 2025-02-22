@@ -1,6 +1,9 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+ # DevSpace
+![image](/public/hero.png)
+-----------------------------------------
+![image](/public/feed.png)
 
-## Getting Started
+A full stack platform for developer to share their interview experiences and learning with others in the community.
 
 First, run the development server:
 
