@@ -80,7 +80,7 @@ export default function RegisterPage() {
     })
 
     toast.dismiss(loadId)
-    if (!res?.error) {
+    if (res.ok) {
       router.push('/login')
       toast.success('Signed Up successfully')
     } else {
