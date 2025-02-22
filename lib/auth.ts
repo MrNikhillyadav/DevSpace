@@ -65,6 +65,7 @@ export const authOptions: AuthOptions = {
     },
     async session({ session, token }) {
       if (session.user) {
+        //@ts-expect-error ignore this line below giving type error
         session.user.id = token.id as string;
         session.user.email = token.email;
       }
