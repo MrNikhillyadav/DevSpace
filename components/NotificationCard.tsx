@@ -1,11 +1,12 @@
-// components/NotificationCard.tsx
+
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 interface NotificationCardProps {
-  avatarSrc: string | null;
+  avatarSrc: string | null | undefined;
   message: string;
   time: string;
 }
+
 
 
 const NotificationCard = ({ avatarSrc, message, time }: NotificationCardProps) => {
