@@ -11,21 +11,21 @@ import { BsBookmarkPlus, BsBookmarkFill } from "react-icons/bs"
 import { BiCommentDetail } from "react-icons/bi"
 import { Code, Terminal } from "lucide-react"
 
-interface PostInterface {
+export interface PostInterface {
     id: string;
-    image: string | null;
-    name: string | null;
+    image?: string | null;
+    name?: string | null;
     createdAt: Date;
     updatedAt: Date;
-    email: string | null;
-    emailVerified: Date | null;
-    password: string | null;
-    bio: string | null;
-    title: string | null;
-    content: string | null;
+    email?: string | null;
+    emailVerified?: Date | null;
+    password?: string | null;
+    bio?: string | null;
+    title?: string | null;
+    content?: string | null;
     author: {
-      image: string | null;
-      name: string | null;
+      image?: string | null;
+      name?: string | null;
     }
 }
 

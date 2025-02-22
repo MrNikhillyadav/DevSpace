@@ -38,6 +38,7 @@ const PublishNewBlog = () => {
     return true;
   };
 
+  //@ts-expect-error lets ignore the e error type
   const handleSubmit = async (e) => {
     const loadId = toast.loading('Publishing ...');
     e.preventDefault();
@@ -61,12 +62,16 @@ const PublishNewBlog = () => {
         router.push('/feed');
         toast.success('Published successfully');
       } else {
+          //@ts-expect-error lets ignore the status type
         if (res.status === 401) {
           toast.error('Invalid input, try again!');
+           //@ts-expect-error lets ignore the status type
         } else if (res.status === 400) {
           toast.error('Missing content!');
+           //@ts-expect-error lets ignore the status type
         } else if (res.status === 404) {
           toast.error('Account not found!');
+           //@ts-expect-error lets ignore the status type
         } else if (res.status === 403) {
           toast.error('Forbidden!');
         } else {

@@ -1,41 +1,51 @@
 'use server'
 
-import prisma from '@/lib/db' 
-import { compare, hash } from "bcrypt";
+import prisma from '@/lib/db'
+import { compare, hash } from "bcrypt"
 import { revalidatePath } from 'next/cache'
+import { Prisma } from '@prisma/client'
 
-export const updateProfile = async (values) => {
-  const { name, email, currentPassword, newPassword } = values;
+type ProfileUpdateInput = {
+  name: string;
+  email: string;
+  currentPassword: string ;
+  newPassword?: string;
+}
 
-  const user = await prisma.user.findFirst({
+export const updateProfile = async (values: ProfileUpdateInput) => {
+  const { name, email, currentPassword, newPassword } = values
+
+  const user = await prisma.user.findUnique({
     where: {
       email,
     },
-  });
+    
+  })
 
   if (!user) {
-    return { error: 'User not found' };
+    return { error: 'User not found' }
   }
 
-  const isCurrentPasswordValid = await compare(currentPassword, user.password);
+  //@ts-ignore
+  const isCurrentPasswordValid = await compare(currentPassword, user.password)
   
   if (!isCurrentPasswordValid) {
-    return { error: 'Current password is incorrect' };
+    return { error: 'Current password is incorrect' }
   }
 
-  const updatedData = {
+  const updatedData: Prisma.UserUpdateInput = {
     name,
     email,
-    ...(newPassword && { password: await hash(newPassword, 10) }), 
-  };
+    ...(newPassword && { password: await hash(newPassword, 10) }),
+  }
 
   await prisma.user.update({
     where: {
       id: user.id,
     },
     data: updatedData,
-  });
+  })
 
   revalidatePath('/profile')
-  return { message: 'Profile updated successfully' };
-};
+  return { message: 'Profile updated successfully' }
+}

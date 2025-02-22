@@ -17,7 +17,14 @@ const alertIconMap = {
   info: Info,
 };
 
-export const Alert = ({ 
+type AlertVariant = keyof typeof alertVariants;
+
+interface AlertProps extends React.HTMLAttributes<HTMLDivElement> {
+  variant?: AlertVariant;
+  onClose?: () => void;
+}
+
+export const Alert: React.FC<AlertProps> = ({ 
   children, 
   variant = 'default', 
   className = '', 
@@ -49,11 +56,15 @@ export const Alert = ({
   );
 };
 
-export const AlertTitle = ({ className = '', ...props }) => (
+interface AlertTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {}
+
+export const AlertTitle: React.FC<AlertTitleProps> = ({ className = '', ...props }) => (
   <h5 className={`mb-1 font-medium leading-none tracking-tight ${className}`} {...props} />
 );
 
-export const AlertDescription = ({ className = '', ...props }) => (
+interface AlertDescriptionProps extends React.HTMLAttributes<HTMLDivElement> {}
+
+export const AlertDescription: React.FC<AlertDescriptionProps> = ({ className = '', ...props }) => (
   <div className={`text-sm opacity-90 ${className}`} {...props} />
 );
 

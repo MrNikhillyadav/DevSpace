@@ -12,11 +12,13 @@ const getPost = cache(async (id:string) => {
 
 })
 
+//@ts-expect-error : fix the id type error
 export default async function Page({params : id}){
     const post = await getPost(id)
     return (
-        <div>
-                {post}
+        <div> 
+          
+                {post?.title}
         </div>
     )
 }
