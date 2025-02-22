@@ -10,7 +10,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { publishNewBlogPost } from "./action";
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
@@ -94,9 +93,9 @@ const PublishNewBlog = () => {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <Alert variant="destructive">
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
+              <p className='text-sm text-red-500'> 
+                {error}
+              </p>
             )}
 
             <div className="space-y-2">
