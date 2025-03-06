@@ -6,6 +6,10 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import prisma from "@/lib/db";
 
+type authorIdType = string;
+
+let authorId:authorIdType = 'b';
+
 const getPost = cache(async (slug: string) => {
   const post = await prisma.post.findFirst({
     where: {
@@ -20,15 +24,33 @@ const getPost = cache(async (slug: string) => {
       },
     },
   });
+
+  authorId = post?.authorId
+  console.log('authorId: ', authorId);
+  console.log('current post :')
+  console.log(post)
   return post;
 });
 
-const RelatedPost = cache(async (take:number, skip:number) => {
+const RelatedPost = cache(async (take:number, skip:number, slug:string, authorId:string) => {
     
   const relatedPosts = await prisma.post.findMany({
     take : take,
     skip: skip,
-    
+    where : {
+      // authorId,           //selecting only current post author's other posts
+      slug : {
+          not : slug    //excluding the current opened post (title-slug)
+      }
+    },
+    include : {
+        author : {
+          select: {
+            name: true,
+            image: true,
+          },
+        }
+    }
   })
   return relatedPosts;
 });
@@ -41,7 +63,8 @@ export default async function Page({
 }) {
   const { slug } = await params;
   const post = await getPost(slug);
-  const relatedPosts = await RelatedPost(4,0);
+  const relatedPosts = await RelatedPost(4,0,slug,authorId);
+  console.log('related posts :')
   console.log(relatedPosts)
 
   if (!post) {
@@ -161,7 +184,7 @@ export default async function Page({
             Explore more posts
           </h2>
           <div className="grid cursor-pointer grid-cols-1 md:grid-cols-2 gap-6">
-            {relatedPosts.map(({id,title,content}) => (
+            {relatedPosts.map(({id,title,content,author}) => (
               <Card
                 key={id}
                 className="bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800/80 transition-colors"
@@ -173,7 +196,7 @@ export default async function Page({
                         U
                       </AvatarFallback>
                     </Avatar>
-                    <span className="text-xs text-zinc-400">Author Name</span>
+                    <span className="text-xs text-zinc-400">{author.name}</span>
                   </div>
                   <h3 className="text-white font-medium mb-2">
                     {title}

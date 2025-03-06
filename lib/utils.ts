@@ -47,7 +47,7 @@ export const generateHandle = (title: string): string => {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/(^-|-$)/g, '')
-    // eslint-disable-next-line no-control-regex
+   
     .replace(/[^\x00-\x7F]/g, (char) => latinToEnglishMap[char] || '');
 
   return handle;

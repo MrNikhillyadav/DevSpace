@@ -10,8 +10,7 @@ import { FiShare2 } from "react-icons/fi"
 import { BsBookmarkPlus, BsBookmarkFill } from "react-icons/bs"
 import { BiCommentDetail } from "react-icons/bi"
 import { Code, Terminal } from "lucide-react"
-import { useSession } from "next-auth/react"
-import prisma from "@/lib/db"
+
 
 export interface PostInterface {
     id: string;
