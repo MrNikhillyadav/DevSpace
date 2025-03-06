@@ -32,13 +32,12 @@ const getPost = cache(async (slug: string) => {
   return post;
 });
 
-const RelatedPost = cache(async (take:number, skip:number, slug:string, authorId:string) => {
+const RelatedPost = cache(async (take:number, skip:number, slug:string) => {
     
   const relatedPosts = await prisma.post.findMany({
     take : take,
     skip: skip,
     where : {
-      // authorId,           //selecting only current post author's other posts
       slug : {
           not : slug    //excluding the current opened post (title-slug)
       }
@@ -63,7 +62,7 @@ export default async function Page({
 }) {
   const { slug } = await params;
   const post = await getPost(slug);
-  const relatedPosts = await RelatedPost(4,0,slug,authorId);
+  const relatedPosts = await RelatedPost(4,1,slug);
   console.log('related posts :')
   console.log(relatedPosts)
 
@@ -146,8 +145,8 @@ export default async function Page({
           </div>
 
           {/* Post content */}
-          <Card className="bg-zinc-800/50 border-zinc-700">
-            <CardContent className="p-6 pt-6 text-zinc-300 leading-relaxed">
+          <Card className=" border-none bg-zinc-900">
+            <CardContent className="pt-6 text-zinc-300 leading-relaxed">
               <div className="prose prose-invert max-w-none">
                 {post.content?.split("\n").map((paragraph, idx) => (
                   <p key={idx} className="mb-4">{paragraph}</p>
@@ -187,7 +186,7 @@ export default async function Page({
             {relatedPosts.map(({id,title,content,author}) => (
               <Card
                 key={id}
-                className="bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800/80 transition-colors"
+                className="bg-zinc-800/50  border-zinc-700  hover:bg-zinc-800/80 transition-colors"
               >
                 <Link href="#" className="block p-4">
                   <div className="flex items-center space-x-3 mb-3">
