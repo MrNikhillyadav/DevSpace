@@ -1,10 +1,11 @@
 import { cache } from "react";
 import prisma  from "@/lib/db"
 
-const getPost = cache(async (id:string) => {
+const getPost = cache(async ({params}:{params:{slug:string}}) => {
+    console.log(params.slug)
     const post = await prisma.post.findUnique({
         where: {
-            id 
+            slug : params.slug, 
         } ,
       });
     
@@ -13,11 +14,11 @@ const getPost = cache(async (id:string) => {
 })
 
 //@ts-expect-error : fix the id type error
-export default async function Page({params : id}){
-    const post = await getPost(id)
+export default async function Page({params : slug}){
+    const post = await getPost(slug)
     return (
         <div> 
-          
+                
                 {post?.title}
         </div>
     )

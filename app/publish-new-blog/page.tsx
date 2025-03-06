@@ -16,6 +16,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link'; // Import Link for navigation
 import {revalidatePath} from 'next/cache'
 import { Icons } from "@/components/icons"
+import { generateHandle } from '@/lib/utils'
 
 const PublishNewBlog = () => {
   const router = useRouter();
@@ -50,10 +51,16 @@ const PublishNewBlog = () => {
 
     setIsSubmitting(true);
 
+      const slug =  generateHandle(title)
+      console.log('generated-slug: ', slug);
+
       const res = await publishNewBlogPost({
         title: title.trim(),
-        content: content.trim()
+        content: content.trim(),
+        slug : slug
       });
+
+      console.log(`res : ${res?.message}`)
       
       toast.dismiss(loadId);
 

@@ -10,6 +10,8 @@ import { FiShare2 } from "react-icons/fi"
 import { BsBookmarkPlus, BsBookmarkFill } from "react-icons/bs"
 import { BiCommentDetail } from "react-icons/bi"
 import { Code, Terminal } from "lucide-react"
+import { useSession } from "next-auth/react"
+import prisma from "@/lib/db"
 
 export interface PostInterface {
     id: string;
@@ -22,6 +24,7 @@ export interface PostInterface {
     password?: string | null;
     bio?: string | null;
     title?: string | null;
+    slug: string | null;
     content?: string | null;
     author: {
       image?: string | null;
@@ -49,6 +52,21 @@ const TrendingTopics = () => (
 );
 
 export default function AllPostComponents({ posts }: AllPostComponentsProps) {
+  // const session = useSession()
+  // const email = session.data?.user?.email;
+
+  // async function findSlug(){
+  //   await prisma.post.findFirst({
+  //     where : {
+  //       slug :  
+  //     }
+  //   })
+
+  // }
+
+  
+
+
   const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
   const [savedPosts, setSavedPosts] = useState<Set<string>>(new Set());
 
@@ -93,8 +111,8 @@ export default function AllPostComponents({ posts }: AllPostComponentsProps) {
 
       <section className="grid grid-cols-1  gap-6 max-w-[900px] mx-auto px-4">
         {posts.map((post) => (
-          <Card key={post.id} className="bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800/80 transition-colors">
-            <Link href={`/post/${post.id}`}>
+          <Card  key={post.slug} className="bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800/80 transition-colors">
+            <Link href={`/post/${post.slug}`}>
               <CardHeader className="pb-4">
                 <div className="flex items-center space-x-4">
                   <Avatar>

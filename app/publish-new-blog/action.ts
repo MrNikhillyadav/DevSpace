@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 import { getServerSession } from 'next-auth';
 
 
-export async function publishNewBlogPost(data: { title: string; content: string }) {
+export async function publishNewBlogPost(data: { title: string; content: string, slug: string }) {
   const session = await getServerSession();
   const email = session?.user?.email;
 
@@ -15,15 +15,20 @@ export async function publishNewBlogPost(data: { title: string; content: string 
         where: {
           email,
         },
-  });
+      });
+
       if (!user) {
         return { message: 'User not found' };
       }
+
       const validatedData = newBlogSchema.parse(data);
+      console.log('validatedData: ', validatedData);
+      
       await prisma.post.create({
         data: { 
           title: validatedData.title,
           content: validatedData.content,
+          slug : validatedData.slug,
           authorId: user.id,
           published: true
         }
