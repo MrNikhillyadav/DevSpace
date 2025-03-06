@@ -3,8 +3,6 @@ import AllPostComponents, { PostInterface } from "@/components/AllPostComponents
 import {getServerSession} from "next-auth";
 import { redirect } from "next/navigation";
 
-
-
 async function getLatestPosts(): Promise<PostInterface[]> {
   const posts = await prisma.post.findMany({
     where: {
@@ -14,7 +12,7 @@ async function getLatestPosts(): Promise<PostInterface[]> {
       author: true,
     },
     orderBy: {
-      createdAt: 'desc', // Changed from author.createdAt to post's createdAt
+      createdAt: 'desc', 
     },
   })
   return posts as PostInterface[]
