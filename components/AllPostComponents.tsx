@@ -108,9 +108,6 @@ export default function AllPostComponents({ posts }: AllPostComponentsProps) {
                   </Avatar>
                   <div className="flex flex-col">
                     <span className="text-sm font-medium text-white">{post.author.name}</span>
-                    <span className="text-xs text-zinc-400">
-                      {/* {new Date(post.createdAt).toLocaleDateString()} */}
-                    </span>
                   </div>
                 </div>
               </CardHeader>
@@ -119,7 +116,7 @@ export default function AllPostComponents({ posts }: AllPostComponentsProps) {
                 <div className="space-y-2">
                   <CardTitle className="text-xl text-white">{post.title}</CardTitle>
                   <p className="text-zinc-400 line-clamp-3">
-                    {post.content?.substring(0, 150)}...
+                    {post.content?.substring(0, 215)}...
                   </p>
                 </div>
 
@@ -135,7 +132,7 @@ export default function AllPostComponents({ posts }: AllPostComponentsProps) {
                   </Badge>
                 </div>
 
-                <div className="flex justify-between items-center pt-4 border-t border-zinc-700">
+                <div className="flex justify-between items-center pt-4  border-zinc-700">
                   <div className="flex gap-6">
                     <button 
                       onClick={(e) => toggleLike(post.id, e)}
