@@ -1,16 +1,33 @@
-import { cache } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import prisma from "@/lib/db";
+import { Metadata } from "next";
 
-type authorIdType = string;
+// Define proper types
+type PostAuthor = {
+  name: string | null;
+  image: string | null;
+};
 
-let authorId:authorIdType = 'b';
+type PostType = {
+  id: string;
+  title: string | null;
+  content: string;
+  slug: string | null;
+  createdAt: Date;
+  authorId: string;
+  author: PostAuthor;
+};
 
-const getPost = cache(async (slug: string) => {
+// Use the proper Next.js types for dynamic route parameters
+type PageParams = {
+  slug: string;
+}
+
+const getPost = async (slug: string): Promise<PostType | null> => {
   const post = await prisma.post.findFirst({
     where: {
       slug,
@@ -24,47 +41,61 @@ const getPost = cache(async (slug: string) => {
       },
     },
   });
+  
+  return post as PostType | null;
+};
 
-  authorId = post?.authorId
-  console.log('authorId: ', authorId);
-  console.log('current post :')
-  console.log(post)
-  return post;
-});
-
-const RelatedPost = cache(async (take:number, skip:number, slug:string) => {
-    
+const getRelatedPosts = async (take: number, skip: number, slug: string): Promise<PostType[]> => {
   const relatedPosts = await prisma.post.findMany({
-    take : take,
+    take: take,
     skip: skip,
-    where : {
-      slug : {
-          not : slug    //excluding the current opened post (title-slug)
+    where: {
+      slug: {
+        not: slug    // excluding the current opened post (title-slug)
       }
     },
-    include : {
-        author : {
-          select: {
-            name: true,
-            image: true,
-          },
-        }
+    include: {
+      author: {
+        select: {
+          name: true,
+          image: true,
+        },
+      }
     }
-  })
-  return relatedPosts;
-});
+  });
+  return relatedPosts as PostType[];
+};
 
+export async function generateMetadata({ 
+  params 
+}: { 
+  params: Promise<PageParams> 
+}): Promise<Metadata> {
+  const resolvedParams = await params;
+  const post = await getPost(resolvedParams.slug);
+  
+  if (!post) {
+    return {
+      title: 'Post not found | DevSpace',
+    };
+  }
+  
+  return {
+    title: `${post.title || 'Post'} | DevSpace`,
+    description: post.content?.substring(0, 160),
+  };
+}
 
-export default async function Page({
+export  default async function BlogPage({ 
   params,
 }: {
-  params: { slug: string };
+  params: Promise<PageParams>;
+  
 }) {
-  const { slug } = await params;
+  const resolvedParams = await params;
+  const {slug} = resolvedParams;
   const post = await getPost(slug);
-  const relatedPosts = await RelatedPost(4,1,slug);
-  console.log('related posts :')
-  console.log(relatedPosts)
+  const relatedPosts = await getRelatedPosts(4, 1, slug);
 
   if (!post) {
     return (
@@ -88,7 +119,7 @@ export default async function Page({
     : "";
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center  bg-zinc-900">
+    <div className="min-h-screen flex flex-col justify-center items-center bg-zinc-900">
       <div className="max-w-[800px] mx-auto px-4 py-16">
         <Link
           href="/feed"
@@ -122,7 +153,7 @@ export default async function Page({
             {post.title}
           </h1>
 
-          {/* TODO: Tech badges - can be dynamic based on post data */}
+          {/* Tech badges - can be dynamic based on post data */}
           <div className="flex flex-wrap gap-2">
             <Badge
               variant="outline"
@@ -145,7 +176,7 @@ export default async function Page({
           </div>
 
           {/* Post content */}
-          <Card className=" border-none bg-zinc-900">
+          <Card className="border-none bg-zinc-900">
             <CardContent className="pt-6 text-zinc-300 leading-relaxed">
               <div className="prose prose-invert max-w-none">
                 {post.content?.split("\n").map((paragraph, idx) => (
@@ -155,7 +186,7 @@ export default async function Page({
             </CardContent>
           </Card>
 
-          {/*TODO: Make it dynamic */}
+          {/* Engagement section */}
           <div className="flex justify-between items-center pt-6 border-zinc-700">
             <div className="flex gap-6">
               <div className="flex items-center gap-2 text-zinc-400">
@@ -183,16 +214,17 @@ export default async function Page({
             Explore more posts
           </h2>
           <div className="grid cursor-pointer grid-cols-1 md:grid-cols-2 gap-6">
-            {relatedPosts.map(({id,title,content,author}) => (
+            {relatedPosts.map(({id, title, content, author, slug}) => (
               <Card
                 key={id}
-                className="bg-zinc-800/50  border-zinc-700  hover:bg-zinc-800/80 transition-colors"
+                className="bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800/80 transition-colors"
               >
-                <Link href="#" className="block p-4">
+                <Link href={`/feed/${slug}`} className="block p-4">
                   <div className="flex items-center space-x-3 mb-3">
                     <Avatar className="h-6 w-6">
+                      <AvatarImage src={author?.image || undefined} />
                       <AvatarFallback className="bg-indigo-600 text-white text-xs">
-                        U
+                        {author?.name?.charAt(0) || "U"}
                       </AvatarFallback>
                     </Avatar>
                     <span className="text-xs text-zinc-400">{author.name}</span>
@@ -201,7 +233,7 @@ export default async function Page({
                     {title}
                   </h3>
                   <p className="text-zinc-400 text-sm">
-                    {content.substring(0,100)}...<span className="text-white">{" "}read more</span>
+                    {content && content.substring(0, 100)}...<span className="text-white">{" "}read more</span>
                   </p>
                 </Link>
               </Card>
