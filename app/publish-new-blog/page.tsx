@@ -17,6 +17,7 @@ import Link from 'next/link'; // Import Link for navigation
 import {revalidatePath} from 'next/cache'
 import { Icons } from "@/components/icons"
 import { generateHandle } from '@/lib/utils'
+import RichTextEditor from '@/components/RichTextEditor/index';
 
 const PublishNewBlog = () => {
   const router = useRouter();
@@ -90,11 +91,12 @@ const PublishNewBlog = () => {
 };
 
   return (
-    <div className="min-h-screen bg-zinc-900 flex items-center justify-center px-4">
+    <div className="min-h-screen  bg-zinc-900 flex items-center justify-center px-4">
       <Card className="w-full max-w-md bg-zinc-800/50 border-zinc-700">
         <CardHeader className="space-y-2 text-center pb-4">
-          <CardTitle className="text-2xl font-bold text-white">
+          <CardTitle className="text-2xl mt-12 font-bold text-white">
             Publish New Article
+            <RichTextEditor/>
           </CardTitle>
         </CardHeader>
         <CardContent>
