@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, FormEvent } from 'react';
 import {
   Card,
   CardContent,
@@ -13,8 +13,7 @@ import { Button } from '@/components/ui/button';
 import { publishNewBlogPost } from "./action";
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link'; // Import Link for navigation
-import {revalidatePath} from 'next/cache'
+import Link from 'next/link';
 import { Icons } from "@/components/icons"
 import { generateHandle } from '@/lib/utils'
 import RichTextEditor from '@/components/RichTextEditor/index';
@@ -25,78 +24,86 @@ const PublishNewBlog = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [content, setContent] = useState('');
-  const contentRef = useRef(null);
+  
+  const handleEditorChange = (newContent:string) => {
+    console.log("Editor content changed:", newContent);
+    setContent(newContent);
+  };
 
-  const onChange =(content:string) => {
-    setContent(content);
-    console.log(content)
-  }
+  // Additional logging to track content state changes
+  useEffect(() => {
+    console.log("Content state updated:", content);
+  }, [content]);
 
   const validateForm = () => {
     if (!title.trim()) {
       setError('Title is required');
       return false;
     }
-    if (!content.trim()) {
+    
+    console.log("Validating content:", content);
+    if (!content || !content.trim()) {
       setError('Content is required');
       return false;
     }
     return true;
   };
 
-  //@ts-expect-error lets ignore the e error type
-  const handleSubmit = async (e) => {
-    const loadId = toast.loading('Publishing ...');
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
-
+    
+    console.log("Form submitted. Content at submission:", content);
+    
     if (!validateForm()) {
-      toast.dismiss(loadId);
       return;
     }
 
+    const loadId = toast.loading('Publishing ...');
     setIsSubmitting(true);
 
-      const slug =  generateHandle(title)
-      console.log('generated-slug: ', slug);
+    const slug = generateHandle(title);
+    console.log('generated-slug:', slug);
+    console.log('submitting content:', content);
 
+    try {
       const res = await publishNewBlogPost({
         title: title.trim(),
-        content: content.trim(),
-        slug : slug
+        content: content.trim(), 
+        slug: slug
       });
 
-      console.log(`res : ${res?.message}`)
-      
+      console.log(`res:`, res);
       toast.dismiss(loadId);
 
       if (!res?.error) {
+        router.refresh();
         router.push('/feed');
         toast.success('Published successfully');
       } else {
-          //@ts-expect-error lets ignore the status type
         if (res.status === 401) {
           toast.error('Invalid input, try again!');
-           //@ts-expect-error lets ignore the status type
         } else if (res.status === 400) {
           toast.error('Missing content!');
-           //@ts-expect-error lets ignore the status type
         } else if (res.status === 404) {
           toast.error('Account not found!');
-           //@ts-expect-error lets ignore the status type
         } else if (res.status === 403) {
           toast.error('Forbidden!');
         } else {
           toast.error('oops something went wrong..!');
         }
-      
-      revalidatePath('/feed')
-      setIsSubmitting(false);   
-  }
-};
+      }
+    } catch (error) {
+      console.error("Error during submission:", error);
+      toast.dismiss(loadId);
+      toast.error('An error occurred during submission');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
-    <div className="min-h-screen  bg-zinc-900 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-zinc-900 flex items-center justify-center px-4">
       <Card className="w-full max-w-[1000px] bg-zinc-800/50 border-zinc-700">
         <CardHeader className="space-y-2 text-center pb-4">
           <CardTitle className="text-2xl mt-12 font-bold text-white">
@@ -126,17 +133,11 @@ const PublishNewBlog = () => {
 
             <div className="space-y-2">
               <Label htmlFor="content" className="text-zinc-300">Content</Label>
-              <textarea
-                id="content"
-                ref={contentRef}
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                className="w-full min-h-[200px] p-2 border rounded-md bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
-                placeholder="Write your article content here..."
-                maxLength={5000}
-                required
+              <RichTextEditor 
+                content={content} 
+                setContent={setContent} 
+                onChange={handleEditorChange}
               />
-              <RichTextEditor content={content} setContent={setContent} onChange={onChange}/>
             </div>
 
             <Button 
@@ -153,6 +154,10 @@ const PublishNewBlog = () => {
                 'Publish'
               )}
             </Button>
+
+            <div className="text-xs text-zinc-500 text-right">
+              Content length: {content?.length || 0} characters
+            </div>
           </form>
 
           <div className="mt-6 text-center">

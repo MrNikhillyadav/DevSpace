@@ -32,12 +32,10 @@ export async function publishNewBlogPost(data: { title: string; content: string,
         }
       });
 
-      // Make sure we're in a context where revalidatePath works
       try {
         revalidatePath('/feed');
       } catch (error) {
         console.error("Error revalidating path:", error);
-        // The page will still refresh when navigated to due to dynamic rendering
       }
 
       return { message: 'Post published successfully' };
