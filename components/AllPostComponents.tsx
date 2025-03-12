@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useState } from "react"
-import { Card, CardContent,CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { FaRegHeart, FaHeart } from "react-icons/fa"
@@ -50,6 +50,22 @@ const TrendingTopics = () => (
   </div>
 );
 
+const stripHtmlTags = (html: string | null | undefined): string => {
+  if (!html) return "";
+  return html.replace(/<[^>]*>/g, '');
+};
+
+// truncate HTML content
+const truncateHtml = (html: string | null | undefined, maxLength: number): string => {
+  if (!html) return "";
+  
+  // Strip HTML tags and truncate
+  const plainText = stripHtmlTags(html);
+  if (plainText.length <= maxLength) return plainText;
+  
+  return plainText.substring(0, maxLength) + "...Read more";
+};
+
 export default function AllPostComponents({ posts }: AllPostComponentsProps) {
 
   const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
@@ -96,7 +112,7 @@ export default function AllPostComponents({ posts }: AllPostComponentsProps) {
 
       <section className="grid grid-cols-1  gap-6 max-w-[900px] mx-auto px-4">
         {posts.map((post) => (
-          <Card  key={post.slug} className="bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800/80 transition-colors">
+          <Card key={post.slug} className="bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800/80 transition-colors">
             <Link href={`/feed/${post.slug}`}>
               <CardHeader className="pb-4">
                 <div className="flex items-center space-x-4">
@@ -116,7 +132,7 @@ export default function AllPostComponents({ posts }: AllPostComponentsProps) {
                 <div className="space-y-2">
                   <CardTitle className="text-xl text-white">{post.title}</CardTitle>
                   <p className="text-zinc-400 line-clamp-3">
-                    {post.content?.substring(0, 215)}...
+                    {truncateHtml(post.content, 215)}
                   </p>
                 </div>
 

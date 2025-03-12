@@ -1,9 +1,15 @@
-import {Heading1,Heading2,
-Heading3,Bold,Italic,AlighCenter,Strikethrough,
-AlighLeft,Highlighter,ListOrdered,List
-} from 'lucide-react';
+"use client";
 
-export default function MenuBar({editor}){
+import {
+    Heading1,Heading2,
+    Heading3,Bold,Italic,AlignCenter,Strikethrough,
+    AlignLeft,Highlighter,ListOrdered,List,AlignRight
+}
+from 'lucide-react';
+import { Toggle } from "@/components/ui/toggle"
+import {Editor} from "@tiptap/react";
+
+export default function MenuBar({editor}:{ editor : Editor | null}){
     if (!editor) {
         return null
     }
@@ -40,18 +46,18 @@ export default function MenuBar({editor}){
             pressed : editor.isActive("strike"),
         },
         {
-            icon :<AlighLeft  className="size-4"/>,
-            onClick : () => editor.chain().focus().toggleAlign("left").run(),
+            icon :<AlignLeft  className="size-4"/>,
+            onClick : () => editor.chain().focus().setTextAlign("left").run(),
             pressed : editor.isActive({textAlign : "left"}),
         },
         {
-            icon :<AlighCenter  className="size-4"/>,
-            onClick : () => editor.chain().focus().toggleAlign("center").run(),
+            icon :<AlignCenter  className="size-4"/>,
+            onClick : () => editor.chain().focus().setTextAlign("center").run(),
             pressed : editor.isActive({textAlign : "center"}),
         },
         {
-            icon :<AlighRight  className="size-4"/>,
-            onClick : () => editor.chain().focus().toggleAlign("right").run(),
+            icon :<AlignRight  className="size-4"/>,
+            onClick : () => editor.chain().focus().setTextAlign("right").run(),
             pressed : editor.isActive({textAlign : "right"}),
         },
         {
@@ -71,44 +77,11 @@ export default function MenuBar({editor}){
         },
     ]
 return (
-        <div className="control-group">
-          <div className="button-group">
-            <button onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()} className={editor.isActive('heading', { level: 1 }) ? 'is-active' : ''}>
-              H1
-            </button>
-            <button onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} className={editor.isActive('heading', { level: 2 }) ? 'is-active' : ''}>
-              H2
-            </button>
-            <button onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()} className={editor.isActive('heading', { level: 3 }) ? 'is-active' : ''}>
-              H3
-            </button>
-            <button onClick={() => editor.chain().focus().setParagraph().run()} className={editor.isActive('paragraph') ? 'is-active' : ''}>
-              Paragraph
-            </button>
-            <button onClick={() => editor.chain().focus().toggleBold().run()} className={editor.isActive('bold') ? 'is-active' : ''}>
-              Bold
-            </button>
-            <button onClick={() => editor.chain().focus().toggleItalic().run()} className={editor.isActive('italic') ? 'is-active' : ''}>
-              Italic
-            </button>
-            <button onClick={() => editor.chain().focus().toggleStrike().run()} className={editor.isActive('strike') ? 'is-active' : ''}>
-              Strike
-            </button>
-            <button onClick={() => editor.chain().focus().toggleHighlight().run()} className={editor.isActive('highlight') ? 'is-active' : ''}>
-              Highlight
-            </button>
-            <button onClick={() => editor.chain().focus().setTextAlign('left').run()} className={editor.isActive({ textAlign: 'left' }) ? 'is-active' : ''}>
-              Left
-            </button>
-            <button onClick={() => editor.chain().focus().setTextAlign('center').run()} className={editor.isActive({ textAlign: 'center' }) ? 'is-active' : ''}>
-              Center
-            </button>
-            <button onClick={() => editor.chain().focus().setTextAlign('right').run()} className={editor.isActive({ textAlign: 'right' }) ? 'is-active' : ''}>
-              Right
-            </button>
-            <button onClick={() => editor.chain().focus().setTextAlign('justify').run()} className={editor.isActive({ textAlign: 'justify' }) ? 'is-active' : ''}>
-              Justify
-            </button>
-          </div>
+       <div className="w-full border rounded-lg p-1 mb-1  border-zinc-700 text-zinc-300 space-x-2 z-50">    
+            {options.map((option,index) => (
+                <Toggle key={index} pressed={option.pressed} onPressedChange={option.onClick} >
+                    {option.icon}
+                </Toggle>
+            ))}
         </div>
 )}

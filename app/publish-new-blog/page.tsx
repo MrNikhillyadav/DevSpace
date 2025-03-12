@@ -22,10 +22,15 @@ import RichTextEditor from '@/components/RichTextEditor/index';
 const PublishNewBlog = () => {
   const router = useRouter();
   const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [content, setContent] = useState('');
   const contentRef = useRef(null);
+
+  const onChange =(content:string) => {
+    setContent(content);
+    console.log(content)
+  }
 
   const validateForm = () => {
     if (!title.trim()) {
@@ -92,11 +97,10 @@ const PublishNewBlog = () => {
 
   return (
     <div className="min-h-screen  bg-zinc-900 flex items-center justify-center px-4">
-      <Card className="w-full max-w-md bg-zinc-800/50 border-zinc-700">
+      <Card className="w-full max-w-[1000px] bg-zinc-800/50 border-zinc-700">
         <CardHeader className="space-y-2 text-center pb-4">
           <CardTitle className="text-2xl mt-12 font-bold text-white">
             Publish New Article
-            <RichTextEditor/>
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -132,6 +136,7 @@ const PublishNewBlog = () => {
                 maxLength={5000}
                 required
               />
+              <RichTextEditor content={content} setContent={setContent} onChange={onChange}/>
             </div>
 
             <Button 

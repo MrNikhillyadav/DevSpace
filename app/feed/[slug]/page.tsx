@@ -6,7 +6,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import prisma from "@/lib/db";
 import { Metadata } from "next";
 
-// Define proper types
 type PostAuthor = {
   name: string | null;
   image: string | null;
@@ -22,7 +21,6 @@ type PostType = {
   author: PostAuthor;
 };
 
-// Use the proper Next.js types for dynamic route parameters
 type PageParams = {
   slug: string;
 }
@@ -50,9 +48,19 @@ const getRelatedPosts = async (take: number, skip: number, slug: string): Promis
     take: take,
     skip: skip,
     where: {
-      slug: {
-        not: slug    // excluding the current opened post (title-slug)
-      }
+      AND: [
+        {
+          slug: {
+            not: slug  // excluding the current opened post (title-slug)
+          }
+        },
+        {
+          published: true
+        }
+      ]
+    },
+    orderBy: {
+      createdAt: 'desc'
     },
     include: {
       author: {
@@ -86,7 +94,7 @@ export async function generateMetadata({
   };
 }
 
-export  default async function BlogPage({ 
+export default async function BlogPage({ 
   params,
 }: {
   params: Promise<PageParams>;
@@ -178,12 +186,12 @@ export  default async function BlogPage({
           {/* Post content */}
           <Card className="border-none bg-zinc-900">
             <CardContent className="pt-6 text-zinc-300 leading-relaxed">
-              <div className="prose prose-invert max-w-none">
-                {post.content?.split("\n").map((paragraph, idx) => (
-                  <p key={idx} className="mb-4">{paragraph}</p>
-                ))}
-              </div>
+              <div 
+                className="prose prose-invert max-w-none"
+                dangerouslySetInnerHTML={{ __html: post.content }}
+              />
             </CardContent>
+
           </Card>
 
           {/* Engagement section */}
@@ -233,7 +241,7 @@ export  default async function BlogPage({
                     {title}
                   </h3>
                   <p className="text-zinc-400 text-sm">
-                    {content && content.substring(0, 100)}...<span className="text-white">{" "}read more</span>
+                    {content ? content.replace(/<[^>]*>/g, '').substring(0, 100) : ''}...<span className="text-white">{" "}read more</span>
                   </p>
                 </Link>
               </Card>
