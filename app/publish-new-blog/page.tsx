@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, FormEvent } from 'react';
+import React, { useState,useEffect, FormEvent,useRef } from 'react';
 import {
   Card,
   CardContent,
@@ -24,10 +24,15 @@ const PublishNewBlog = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [content, setContent] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
   
   const handleEditorChange = (newContent:string) => {
     setContent(newContent);
   };
+
+  useEffect(() => {
+    inputRef.current?.focus()
+  },[])
 
   const validateForm = () => {
     if (!title.trim()) {
@@ -96,10 +101,24 @@ const PublishNewBlog = () => {
 
   return (
     <div className="min-h-screen bg-zinc-900 flex items-center justify-center px-4">
-      <Card className="w-full max-w-[1000px] bg-zinc-800/50 border-zinc-700">
+      <Card className="w-full max-w-[1000px] bg-zinc-900 border-none">
         <CardHeader className="space-y-2 text-center pb-4">
-          <CardTitle className="text-2xl mt-12 font-bold text-white">
-            Publish New Article
+          <CardTitle className="flex flex-row items-center justify-between text-2xl mt-12 font-bold text-white">
+            <h1 className="ml-4">Write the New Article</h1>
+            <Button 
+              type="submit" 
+              className=" bg-primary hover:bg-indigo-600 text-white"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <div className="flex items-center justify-center">
+                  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                  Publishing...
+                </div>
+              ) : (
+                'Publish'
+              )}
+            </Button>
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -115,6 +134,7 @@ const PublishNewBlog = () => {
               <Input
                 id="title"
                 value={title}
+                ref={inputRef}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Article Title..."
                 className="w-full bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
@@ -132,20 +152,7 @@ const PublishNewBlog = () => {
               />
             </div>
 
-            <Button 
-              type="submit" 
-              className="w-full bg-primary hover:bg-indigo-700 text-white"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? (
-                <div className="flex items-center justify-center">
-                  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                  Publishing...
-                </div>
-              ) : (
-                'Publish'
-              )}
-            </Button>
+           
 
             <div className="text-xs text-zinc-500 text-right">
               Content length: {content?.length || 0} characters

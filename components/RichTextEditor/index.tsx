@@ -57,7 +57,6 @@ export default function RichTextEditor({content, onChange, setContent}: RichText
                 "w-full bg-zinc-800 font-normal border-zinc-700 p-4 border rounded-md text-white min-h-[200px]",
             },
         },
-        // Fix for SSR hydration mismatch
         immediatelyRender: false,
     });
 
