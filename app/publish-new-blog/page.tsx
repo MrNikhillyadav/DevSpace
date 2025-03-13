@@ -154,9 +154,7 @@ const PublishNewBlog = () => {
                 onChange={handleEditorChange}
               />
             </div>
-
-           
-
+            
             <div className="text-xs text-zinc-500 text-right">
               Content length: {content?.length || 0} characters
             </div>
