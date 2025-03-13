@@ -12,7 +12,7 @@ export const formSchema = z.object({
 
 export const newBlogSchema = z.object({
   title: z.string().min(1, "Title is required").max(100, "Title is too long"),
-  content: z.string().min(1, "Content is required").max(5000, "Content is too long"),
+  content: z.string().min(1, "Content is required").max(10000, "Content is too long"),
   slug : z.string()
 });
 
