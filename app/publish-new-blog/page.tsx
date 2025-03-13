@@ -26,14 +26,8 @@ const PublishNewBlog = () => {
   const [content, setContent] = useState('');
   
   const handleEditorChange = (newContent:string) => {
-    console.log("Editor content changed:", newContent);
     setContent(newContent);
   };
-
-  // Additional logging to track content state changes
-  useEffect(() => {
-    console.log("Content state updated:", content);
-  }, [content]);
 
   const validateForm = () => {
     if (!title.trim()) {
@@ -53,7 +47,6 @@ const PublishNewBlog = () => {
     e.preventDefault();
     setError('');
     
-    console.log("Form submitted. Content at submission:", content);
     
     if (!validateForm()) {
       return;
@@ -64,7 +57,6 @@ const PublishNewBlog = () => {
 
     const slug = generateHandle(title);
     console.log('generated-slug:', slug);
-    console.log('submitting content:', content);
 
     try {
       const res = await publishNewBlogPost({
