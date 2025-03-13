@@ -28,7 +28,6 @@ const PublishNewBlog = () => {
   
   const handleEditorChange = (newContent:string) => {
     setContent(newContent);
-    console.log('newContent: ', newContent);
   };
 
   useEffect(() => {
@@ -106,22 +105,20 @@ const PublishNewBlog = () => {
         <CardHeader className="space-y-2 text-center pb-4">
           <CardTitle className="flex flex-row items-center justify-between text-2xl mt-12 font-bold text-white">
             <h1 className="ml-4">Write the New Article</h1>
-            <form onSubmit={handleSubmit}>
-                <Button 
-                  type="submit" 
-                  className=" bg-primary hover:bg-indigo-600 text-white"
-                  disabled={isSubmitting}> 
-
-                {isSubmitting ? (
-                  <div className="flex items-center justify-center">
-                    <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                    Publishing...
-                  </div>
-                ) : (
-                  'Publish'
-                )}
-              </Button>
-            </form>
+            <Button 
+              type="submit" 
+              className=" bg-primary hover:bg-indigo-600 text-white"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <div className="flex items-center justify-center">
+                  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                  Publishing...
+                </div>
+              ) : (
+                'Publish'
+              )}
+            </Button>
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -154,7 +151,9 @@ const PublishNewBlog = () => {
                 onChange={handleEditorChange}
               />
             </div>
-            
+
+           
+
             <div className="text-xs text-zinc-500 text-right">
               Content length: {content?.length || 0} characters
             </div>

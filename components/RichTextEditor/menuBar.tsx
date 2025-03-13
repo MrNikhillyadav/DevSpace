@@ -3,7 +3,7 @@
 import {
     Heading1,Heading2,
     Heading3,Bold,Italic,AlignCenter,Strikethrough,
-    AlignLeft,Highlighter,ListOrdered,List,AlignRight,Code
+    AlignLeft,Highlighter,ListOrdered,List,AlignRight
 }
 from 'lucide-react';
 import { Toggle } from "@/components/ui/toggle"
@@ -74,11 +74,6 @@ export default function MenuBar({editor}:{ editor : Editor | null}){
             icon :<Highlighter  className="size-4"/>,
             onClick : () => editor.chain().focus().toggleHighlight().run(),
             pressed : editor.isActive("highlighter"),
-        },
-        {
-            icon :<Code   className="size-4"/>,
-            onClick: () => editor.chain().focus().toggleCode().run(),
-            pressed : editor.isActive("code"),
         },
     ]
 return (
