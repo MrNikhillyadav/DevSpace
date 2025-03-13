@@ -5,6 +5,7 @@ import StarterKit from '@tiptap/starter-kit'
 import MenuBar from './menuBar'
 import Highlight from '@tiptap/extension-highlight'
 import TextAlign from '@tiptap/extension-text-align'
+import Code from '@tiptap/extension-code'
 import { useEffect, useState } from 'react'
 
 interface RichTextEditorInterface {
@@ -12,6 +13,7 @@ interface RichTextEditorInterface {
   onChange: (content: string) => void;
   setContent?: (content: string) => void;
 }
+
 
 export default function RichTextEditor({content, onChange, setContent}: RichTextEditorInterface) {
     const [isMounted, setIsMounted] = useState(false);
@@ -41,7 +43,13 @@ export default function RichTextEditor({content, onChange, setContent}: RichText
                 HTMLAttributes: {
                   class: 'bg-white p-1',
                 },
-            })
+            }),
+            Code.configure({
+                HTMLAttributes: {
+                  class: 'bg-zinc-800/50  px-4 py-6 my-2 block text-sm rounded-sm',
+                },
+              })
+              
         ],
         onUpdate: ({ editor }) => {
             const html = editor?.getHTML();
@@ -60,7 +68,6 @@ export default function RichTextEditor({content, onChange, setContent}: RichText
         immediatelyRender: false,
     });
 
-    // Update editor content when content prop changes
     useEffect(() => {
         if (editor && content !== editor.getHTML()) {
             editor.commands.setContent(content);
