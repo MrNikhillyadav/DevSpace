@@ -58,7 +58,7 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="px-12 backdrop-blur-sm fixed w-full z-50">
+    <nav className="md:px-12 backdrop-blur-sm fixed w-full z-50">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo Section */}
         <div className="flex items-center gap-2">
@@ -89,7 +89,7 @@ export default function Navbar() {
             <>
               <Button 
                 asChild
-                className="bg-primary hover:bg-indigo-700 rounded-full w-10 h-10 p-0"
+                className="bg-primary hidden md:block hover:bg-indigo-700 rounded-full w-10 h-10 p-0"
               >
                 <Link href="/publish-new-blog">
                   <FaPenClip className="w-4 h-4" />
@@ -100,7 +100,7 @@ export default function Navbar() {
                 <DropdownMenuTrigger asChild>
                   <Button 
                     variant="ghost" 
-                    className="rounded-full w-10 h-10 p-0 text-zinc-400 hover:text-white border border-zinc-700"
+                    className="rounded-full hidden md:block  w-10 h-10 p-0 text-zinc-400 hover:text-white border border-zinc-700"
                   >
                     <RiNotification2Fill className="w-5 h-5" />
                   </Button>
@@ -156,12 +156,14 @@ export default function Navbar() {
               <Button 
                 variant="ghost" 
                 asChild 
-                className="text-zinc-400 hover:text-white"
+                
+                className="text-zinc-400 hidden md:block hover:text-white"
               >
                 <Link href="/login">Sign In</Link>
               </Button>
               <Button 
                 asChild 
+                size="md"
                 className="bg-primary hover:bg-indigo-700 text-white"
               >
                 <Link href="/register">Get Started</Link>
