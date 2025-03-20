@@ -10,17 +10,17 @@ export const HeroSection = () => (
       <div className="inline-flex items-center gap-2 bg-zinc-800/50 px-4 py-2 rounded-full mb-8">
         <span className="w-2 h-2 bg-primary rounded-full animate-pulse" />
         <span className="text-zinc-300">New Feature</span>
-        <span className="text-zinc-400">AI-Powered Code Snippets</span>
+        <span className="text-zinc-400 hidden md:block">AI-Powered Code Snippets</span>
         <ArrowRight size={16} className="text-zinc-400" />
       </div>
   
-      <h1 className="text-6xl font-bold mb-6">
+      <h1 className="text-4xl md:text-6xl font-bold mb-6">
         <span className="text-white">Where developers</span>
         <br />
         <span className="text-zinc-500">share their stories.</span>
       </h1>
   
-      <p className="text-zinc-400 text-xl mb-12 max-w-2xl mx-auto">
+      <p className="text-zinc-400 text-md md:text-xl mb-12 max-w-2xl mx-auto">
         Write, share, and grow with a community of developers. Transform your coding journey into compelling stories.
       </p>
   
