@@ -24,15 +24,15 @@ export const HeroSection = () => (
         Write, share, and grow with a community of developers. Transform your coding journey into compelling stories.
       </p>
   
-      <div className="flex items-center justify-center gap-4">
+      <div className=" flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4">
         <Link href="/feed">
-          <Button className="bg-primary hover:bg-indigo-700 text-white px-8 py-6">
+          <Button className="bg-primary hover:bg-indigo-700 text-white px-10 md:px-8 py-6">
             Start Writing
           </Button>
         </Link>
         <Link href="/feed">
           <Button variant="outline" className="text-black hover:text-white border-zinc-700 hover:bg-zinc-800 px-8 py-6">
-             <BookOpen size={16} className="mr-2" /> Explore Articles 
+             <BookOpen size={16} className="mr-2 hidden md:block" /> Explore Articles 
           </Button>
         </Link>
       </div>

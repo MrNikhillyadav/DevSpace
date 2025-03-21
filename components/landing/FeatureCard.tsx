@@ -9,10 +9,10 @@ interface FeatureCardProps {
 }
 
 export const FeatureCard: React.FC<FeatureCardProps> = ({ icon: Icon, title, description, stats }) => (
-  <Card className="bg-zinc-800/50 border-zinc-700 p-6">
-    <div className="flex items-start gap-4">
+  <Card className="bg-zinc-800/50 border-zinc-700 p-4 md:p-6">
+    <div className="flex flex-col md:flex-row items-start md:gap-4">
       <div className="p-2 bg-primary/20 rounded-lg">
-        <Icon className="w-6 h-6 text-indigo-400" />
+        <Icon className=" md:w-6 md:h-6 text-indigo-400" />
       </div>
       <div>
         <h3 className="text-white text-lg font-semibold mb-2">{title}</h3>

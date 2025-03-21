@@ -3,7 +3,7 @@ import { FeatureCard } from './FeatureCard';
 import { Code, Terminal, Users } from 'lucide-react';
 
 export  const FeaturesGrid = () => (
-    <div className="container mx-auto px-4 pb-24 grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="container mx-auto px-4 pb-10 md:pb-24 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
       <FeatureCard 
         icon={Terminal}
         title="Technical Writing"
@@ -22,5 +22,7 @@ export  const FeaturesGrid = () => (
         description="Connect with fellow developers and get feedback"
         stats="100k+ Active Writers"
       />
+
+      <p className=" text-xs md:hidden  text-zinc-400 text-center">copyright 2025</p>
     </div>
   );
