@@ -65,7 +65,7 @@ export default function Navbar() {
           <div className="w-8 h-8 bg-primary rounded flex items-center justify-center">
             <Code className="w-5 h-5 text-white" />
           </div>
-          <Link href="/" className="text-xl font-semibold text-white">
+          <Link href="/" className="text-xl outline-none font-semibold text-white">
             DevSpace<span className="text-indigo-500">.</span>
           </Link>
         </div>
@@ -156,14 +156,12 @@ export default function Navbar() {
               <Button 
                 variant="ghost" 
                 asChild 
-                
                 className="text-zinc-400 hidden md:block hover:text-white"
               >
                 <Link href="/login">Sign In</Link>
               </Button>
               <Button 
                 asChild 
-                size="md"
                 className="bg-primary hover:bg-indigo-700 text-white"
               >
                 <Link href="/register">Get Started</Link>
