@@ -6,7 +6,6 @@ export async function POST(req: Request) {
   try {
     const { name, email, password } = await req.json()
 
-    // Check if user exists
     const existingUser = await prisma.user.findUnique({
       where: {
         email,
@@ -20,10 +19,8 @@ export async function POST(req: Request) {
       )
     }
 
-    // Hash password
     const hashedPassword = await hash(password, 10)
 
-    // Create user
      await prisma.user.create({
       data: {
         name,
@@ -38,7 +35,9 @@ export async function POST(req: Request) {
     )
   } catch (error) {
     console.error("Registration error:", error)
+
     return NextResponse.json(
+      
       { message: "Something went wrong" },
       { status: 500 }
     )

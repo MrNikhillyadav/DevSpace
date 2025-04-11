@@ -24,11 +24,11 @@ export async function publishNewBlogPost(data: { title: string; content: string,
       
       await prisma.post.create({
         data: { 
-          title: validatedData.title,
-          content: validatedData.content,
-          slug: validatedData.slug,
-          authorId: user.id,
-          published: true
+            title: validatedData.title,
+            content: validatedData.content,
+            slug: validatedData.slug,
+            authorId: user.id,
+            published: true
         }
       });
 

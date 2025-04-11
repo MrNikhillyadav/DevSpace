@@ -47,7 +47,7 @@ model User {
   sessions      Session[]
   posts         Post[]
 }
-//TODO2 : ADD SLUG FOR POST TITLE
+
 //TODO3 : ADD POST IMAGE BANNER FIELD
 //TODO4: ADD LIKE,VIEWED COUNT FIELD
 
