@@ -8,7 +8,7 @@ export async function POST(request:NextRequest) {
   console.log('prompt: ', prompt);
   const API_KEY = process.env.GEMINI_API_KEY; 
 
-  //@ts-ignore 
+  //@ts-expect-error : ignore the api key type error 
   const genAI = new GoogleGenerativeAI(API_KEY);
   const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 

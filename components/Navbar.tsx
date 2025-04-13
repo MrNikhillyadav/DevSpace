@@ -78,6 +78,9 @@ export default function Navbar() {
           <div className="flex items-center gap-1 text-zinc-400 hover:text-white text-sm cursor-pointer transition-colors">
             Explore <ChevronDown size={14} />
           </div>
+          <Link href="/ask-ai" className="text-zinc-400 hover:text-white text-sm transition-colors">
+            Ask AI ✨
+          </Link>
           <Link href="/settings" className="text-zinc-400 hover:text-white text-sm transition-colors">
             Settings
           </Link>
