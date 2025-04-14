@@ -87,12 +87,12 @@ export default function Navbar() {
         </div>
 
         {/* Auth Section */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center justify-centere gap-4">
           {session ? (
             <>
               <Button 
                 asChild
-                className="bg-primary hidden md:block hover:bg-indigo-700 rounded-full w-10 h-10 p-0"
+                className="bg-primary hidden md:flex  hover:bg-indigo-700 rounded-full w-10 h-10 p-0"
               >
                 <Link href="/publish-new-blog">
                   <FaPenClip className="w-4 h-4" />
@@ -103,7 +103,7 @@ export default function Navbar() {
                 <DropdownMenuTrigger asChild>
                   <Button 
                     variant="ghost" 
-                    className="rounded-full hidden md:block  w-10 h-10 p-0 text-zinc-400 hover:text-white border border-zinc-700"
+                    className="rounded-full hidden md:flex  w-10 h-10 p-0 text-zinc-400 hover:text-white border border-zinc-700"
                   >
                     <RiNotification2Fill className="w-5 h-5" />
                   </Button>
