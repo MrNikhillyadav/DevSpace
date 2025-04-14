@@ -203,7 +203,7 @@ export default function AskAI(): JSX.Element {
 
   return (
     <div className="min-h-screen bg-zinc-900 flex items-center justify-center p-4">
-      <Card className="w-full max-w-5xl h-[80vh] bg-zinc-800/50 border-zinc-700 flex flex-col">
+      <Card className="w-full max-w-5xl h-[80vh] pt-20 bg-zinc-800/50 border-zinc-700 flex flex-col">
         <CardHeader className="space-y-2 text-center pb-4 border-b border-zinc-700 flex flex-row justify-between items-center">
           <CardTitle className="text-2xl font-bold text-white flex items-center justify-center gap-2">
             <BsChatDots className="text-2xl text-indigo-500" />
